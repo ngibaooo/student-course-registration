@@ -158,14 +158,18 @@ refactor: clean service layer
 ---
 
 # Database Setup
+1. Install libraries in requirements.txt
+```text
+pip install -r requirements.txt
+```
 
-1. Run:
+2. Run:
 
 ```text
 database/schema.sql
 ```
 
-2. Then:
+3. Then:
 
 ```text
 database/seed_data.sql
