@@ -8,11 +8,8 @@ load_dotenv()
 DB_SERVER = os.getenv("DB_SERVER")
 DB_NAME = os.getenv("DB_NAME")
 
-DATABASE_URL = (
-    f"mssql+pyodbc://@{DB_SERVER}/{DB_NAME}"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-    "&trusted_connection=yes"
-)
+
+DATABASE_URL = f"mssql+pymssql://{DB_SERVER}/{DB_NAME}"
 
 engine = create_engine(
     DATABASE_URL,
