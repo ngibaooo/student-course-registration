@@ -200,7 +200,7 @@ main
 ### Feature Branches
 
 ```text
-feature/leader-registration
+feature/registration-module
 feature/admin-module
 feature/student-module
 feature/frontend
