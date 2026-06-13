@@ -212,20 +212,46 @@ BEGIN
 
     
     -- Đăng kí thành công
-    INSERT INTO CourseRegistration
+    -- Check nếu đã có CourseRegistration đó rồi nhưng bị hủy thì chỉ cần update lại status CANCELED -> REGISTERED 
+    IF EXISTS
     (
-        student_id,
-        section_id,
-        registration_date,
-        status
+        SELECT 1
+        FROM CourseRegistration
+        WHERE student_id = @StudentId
+        AND section_id = @SectionId
+        AND status = 'CANCELED'
     )
-    VALUES
-    (
-        @StudentId,
-        @SectionId,
-        GETDATE(),
-        'REGISTERED'
-    );
+    BEGIN
+
+        UPDATE CourseRegistration
+        SET
+            status = 'REGISTERED',
+            registration_date = GETDATE()
+        WHERE student_id = @StudentId
+        AND section_id = @SectionId;
+
+    END
+    ELSE
+    
+    -- ngược lại thì insert bản ghi mới
+    BEGIN
+
+        INSERT INTO CourseRegistration
+        (
+            student_id,
+            section_id,
+            registration_date,
+            status
+        )
+        VALUES
+        (
+            @StudentId,
+            @SectionId,
+            GETDATE(),
+            'REGISTERED'
+        );
+
+    END
 
     
     -- Cập nhật sĩ số lớp
