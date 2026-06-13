@@ -190,3 +190,39 @@ ON CourseRegistration(student_id);
 
 CREATE INDEX IX_CourseRegistration_Section
 ON CourseRegistration(section_id);
+
+
+-- UPDATE: THÊM MỚI BẢNG RegistrationLog
+CREATE TABLE RegistrationLog
+(
+    id INT IDENTITY(1,1) PRIMARY KEY,
+
+    action_type VARCHAR(20) NOT NULL
+        CHECK (action_type IN ('REGISTER', 'CANCEL')),
+
+    action_date DATETIME NOT NULL
+        DEFAULT GETDATE(),
+
+    student_id INT NOT NULL,
+
+    section_id INT NOT NULL,
+
+    CONSTRAINT FK_RegistrationLog_Student
+        FOREIGN KEY (student_id)
+        REFERENCES Student(id),
+
+    CONSTRAINT FK_RegistrationLog_CourseSection
+        FOREIGN KEY (section_id)
+        REFERENCES CourseSection(id)
+);
+GO
+
+CREATE INDEX IX_RegistrationLog_Student
+ON RegistrationLog(student_id);
+
+CREATE INDEX IX_RegistrationLog_Section
+ON RegistrationLog(section_id);
+
+CREATE INDEX IX_RegistrationLog_ActionDate
+ON RegistrationLog(action_date);
+GO
