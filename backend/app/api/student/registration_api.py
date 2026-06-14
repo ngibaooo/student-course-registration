@@ -1,20 +1,28 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app.schemas.student.registration_schema import RegisterCourseRequest
+from app.database.connection import get_db
+from app.schemas.student.registration_schemas import RegisterCourseSectionRequest, CancelCourseSectionRequest
 from app.services.student.registration_service import RegistrationService
-from app.services.auth_service import require_student
+# from app.services.auth_service import require_student #tên hàm này phụ thuộc bên auth_service của nhánh student
+                                                      #(đợi nhánh đó xong sẽ update theo đúng tên hàm)
 
 router = APIRouter(
     prefix="/registrations",
     tags=["Registration"]
 )
+#Fake JWT để test api trong lúc đợi phần auth
+def fake_student():
+    return {
+        "student_id": 1,
+        "role": "STUDENT"
+    }
 
 @router.post("")
 def register_course(
-    request: RegisterCourseRequest,
-    current_user = Depends(require_student),
+    request: RegisterCourseSectionRequest,
+    # current_user = Depends(require_student),
+    current_user = Depends(fake_student),
     db: Session = Depends(get_db)
 ):
     student_id = current_user["student_id"]
@@ -26,8 +34,9 @@ def register_course(
     )
 @router.delete("")
 def cancel_course(
-    request: CancelCourseRequest,
-    current_user = Depends(require_student),
+    request: CancelCourseSectionRequest,
+    # current_user = Depends(require_student),
+    current_user = Depends(fake_student),
     db: Session = Depends(get_db)
 ):
     student_id = current_user["student_id"]

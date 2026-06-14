@@ -1,4 +1,6 @@
-from app.repositories.admin.registration_repository import RegisterRepository
+from app.repositories.student.registration_repository import RegistrationRepository
+from fastapi import HTTPException
+
 class RegistrationService:
 
     @staticmethod
