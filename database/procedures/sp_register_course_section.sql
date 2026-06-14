@@ -18,9 +18,10 @@ BEGIN
     -- Update: dùng fn_is_valid_student
     IF dbo.fn_is_valid_student(@StudentId) = 0
     BEGIN
-        PRINT N'Sinh viên không tồn tại';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50001,
+            N'Sinh viên không tồn tại',
+            1;
     END
 
     -- Validate 2: Tài khoản sinh viên phải ACTIVE
@@ -35,9 +36,10 @@ BEGIN
     -- )
     IF dbo.fn_is_active_student(@StudentId) = 0
     BEGIN
-        PRINT N'Tài khoản sinh viên đang bị khóa';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50002,
+          N'Tài khoản sinh viên đang bị khóa',
+          1;
     END
 
     
@@ -50,9 +52,10 @@ BEGIN
     -- )
     IF dbo.fn_is_valid_course_section(@SectionId) = 0
     BEGIN
-        PRINT N'Lớp học phần không tồn tại';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50003,
+            N'Lớp học phần không tồn tại',
+            1;
     END
 
     
@@ -66,9 +69,10 @@ BEGIN
     -- )
     IF dbo.fn_is_active_course_section(@SectionId) = 0
     BEGIN
-        PRINT N'Lớp học phần đang không hoạt động';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50004,
+            N'Lớp học phần đang không hoạt động',
+            1;
     END
 
     
@@ -109,9 +113,10 @@ BEGIN
     -- Update Validate 5 & 6: Dùng function fn_is_registration_open
     IF dbo.fn_is_registration_open(@SectionId) = 0
     BEGIN
-        PRINT N'Ngoài thời gian đăng ký hoặc học kỳ chưa mở';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50005,
+            N'Ngoài thời gian đăng ký hoặc học kỳ chưa mở',
+            1;
     END
     
     -- Validate 7: Lớp chưa đầy
@@ -125,9 +130,10 @@ BEGIN
     -- Update Validate 7: Dùng function fn_get_remaining_slots
     IF dbo.fn_get_remaining_slots(@SectionId) <= 0
     BEGIN
-        PRINT N'Lớp học phần đã đủ số lượng sinh viên';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50006,
+            N'Lớp học phần đã đủ số lượng sinh viên',
+            1;
     END
 
     
@@ -174,9 +180,10 @@ BEGIN
         @SectionId
     ) = 1
     BEGIN
-        PRINT N'Sinh viên đã đăng ký môn học này trong học kì';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50007,
+            N'Sinh viên đã đăng ký môn học này trong học kỳ',
+            1;
     END
     
     -- Validate 10: Không trùng lịch học
@@ -205,9 +212,10 @@ BEGIN
         @SectionId
     ) = 1
     BEGIN
-        PRINT N'Lớp học phần bị trùng lịch học';
         ROLLBACK TRANSACTION;
-        RETURN;
+        THROW 50008,
+            N'Lớp học phần bị trùng lịch học',
+            1;
     END
 
     
