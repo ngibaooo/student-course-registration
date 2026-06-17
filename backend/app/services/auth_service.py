@@ -27,6 +27,7 @@ def verify_password(input_password: str, stored_password: str):
     Nếu mật khẩu trong database đã mã hóa bcrypt thì kiểm tra bcrypt.
     Nếu database đang lưu mật khẩu thường thì so sánh trực tiếp.
     """
+
     if stored_password.startswith("$2b$") or stored_password.startswith("$2a$"):
         return pwd_context.verify(input_password, stored_password)
 
@@ -57,22 +58,25 @@ def login_service(request: LoginRequest):
             detail="Tài khoản không tồn tại"
         )
 
-    if account["TrangThai"] == 0:
+    if str(account["status"]).upper() != "ACTIVE":
         raise HTTPException(
             status_code=403,
             detail="Tài khoản đã bị khóa"
         )
 
-    if not verify_password(request.password, account["MatKhau"]):
+    if not verify_password(
+        request.password,
+        account["password"]
+    ):
         raise HTTPException(
             status_code=401,
             detail="Mật khẩu không chính xác"
         )
 
     token_data = {
-        "username": account["TenDangNhap"],
-        "role": account["VaiTro"],
-        "student_id": account["MaSV"]
+        "user_id": account["id"],
+        "username": account["email"],
+        "role": account["role"]
     }
 
     access_token = create_access_token(token_data)
@@ -80,10 +84,10 @@ def login_service(request: LoginRequest):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "username": account["TenDangNhap"],
-        "role": account["VaiTro"],
-        "student_id": account["MaSV"],
-        "full_name": account["HoTen"]
+        "user_id": account["id"],
+        "username": account["email"],
+        "role": account["role"],
+        "full_name": account["full_name"]
     }
 
 

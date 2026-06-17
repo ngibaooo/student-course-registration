@@ -16,16 +16,15 @@ def get_account_by_username(username: str):
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                TK.TenDangNhap,
-                TK.MatKhau,
-                TK.VaiTro,
-                TK.TrangThai,
-                TK.MaSV,
-                SV.HoTen
-            FROM TaiKhoan TK
-            LEFT JOIN SinhVien SV ON TK.MaSV = SV.MaSV
-            WHERE TK.TenDangNhap = ?
+            SELECT
+                id,
+                full_name,
+                email,
+                password,
+                role,
+                status
+            FROM [User]
+            WHERE email = ?
         """
 
         cursor.execute(query, username)

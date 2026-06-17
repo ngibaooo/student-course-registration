@@ -14,28 +14,29 @@ def row_to_dict(cursor, row):
     return dict(zip(columns, row))
 
 
-def get_student_profile(ma_sv: str):
+def get_student_profile(user_id: int):
     conn = get_connection()
 
     try:
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                MaSV,
-                HoTen,
-                NgaySinh,
-                GioiTinh,
-                Email,
-                SoDienThoai,
-                Lop,
-                Khoa,
-                TrangThai
-            FROM SinhVien
-            WHERE MaSV = ?
+        SELECT
+            s.id,
+            u.full_name,
+            u.email,
+            s.date_of_birth,
+            s.gender,
+            s.phone,
+            s.address,
+            d.department_name
+        FROM Student s
+        JOIN [User] u ON s.user_id = u.id
+        LEFT JOIN Department d ON s.department_id = d.id
+        WHERE u.id = ?
         """
 
-        cursor.execute(query, ma_sv)
+        cursor.execute(query, user_id)
         row = cursor.fetchone()
 
         return row_to_dict(cursor, row)
@@ -51,26 +52,22 @@ def get_open_courses():
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                LHP.MaLHP,
-                MH.MaMon,
-                MH.TenMon,
-                MH.SoTinChi,
-                LHP.HocKy,
-                LHP.NamHoc,
-                LHP.GiangVien,
-                LHP.PhongHoc,
-                LHP.Thu,
-                LHP.TietBatDau,
-                LHP.TietKetThuc,
-                LHP.SiSoToiDa,
-                LHP.SiSoDaDangKy,
-                LHP.TrangThai,
-                (LHP.SiSoToiDa - LHP.SiSoDaDangKy) AS SoChoConLai
-            FROM LopHocPhan LHP
-            JOIN MonHoc MH ON LHP.MaMon = MH.MaMon
-            WHERE LHP.TrangThai = N'Đang mở'
-            ORDER BY MH.TenMon
+        SELECT
+            cs.id,
+            c.course_name,
+            c.credits,
+            l.full_name AS lecturer_name,
+            cs.classroom,
+            cs.schedule_day,
+            cs.start_period,
+            cs.end_period,
+            cs.maximum_students,
+            cs.registered_students,
+            (cs.maximum_students - cs.registered_students) AS available_slots
+        FROM CourseSection cs
+        JOIN Course c ON cs.course_id = c.id
+        LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
+        WHERE cs.status = 'ACTIVE'
         """
 
         cursor.execute(query)
@@ -82,37 +79,26 @@ def get_open_courses():
         conn.close()
 
 
-def get_course_detail(ma_lhp: str):
+def get_course_detail(section_id: int):
     conn = get_connection()
 
     try:
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                LHP.MaLHP,
-                MH.MaMon,
-                MH.TenMon,
-                MH.SoTinChi,
-                MH.SoTietLyThuyet,
-                MH.SoTietThucHanh,
-                LHP.HocKy,
-                LHP.NamHoc,
-                LHP.GiangVien,
-                LHP.PhongHoc,
-                LHP.Thu,
-                LHP.TietBatDau,
-                LHP.TietKetThuc,
-                LHP.SiSoToiDa,
-                LHP.SiSoDaDangKy,
-                LHP.TrangThai,
-                (LHP.SiSoToiDa - LHP.SiSoDaDangKy) AS SoChoConLai
-            FROM LopHocPhan LHP
-            JOIN MonHoc MH ON LHP.MaMon = MH.MaMon
-            WHERE LHP.MaLHP = ?
+        SELECT
+            cs.*,
+            c.course_name,
+            c.credits,
+            c.description,
+            l.full_name AS lecturer_name
+        FROM CourseSection cs
+        JOIN Course c ON cs.course_id = c.id
+        LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
+        WHERE cs.id = ?
         """
 
-        cursor.execute(query, ma_lhp)
+        cursor.execute(query, section_id)
         row = cursor.fetchone()
 
         return row_to_dict(cursor, row)
@@ -127,37 +113,23 @@ def search_courses(keyword: str):
     try:
         cursor = conn.cursor()
 
-        search_value = f"%{keyword}%"
+        keyword = f"%{keyword}%"
 
         query = """
-            SELECT 
-                LHP.MaLHP,
-                MH.MaMon,
-                MH.TenMon,
-                MH.SoTinChi,
-                LHP.HocKy,
-                LHP.NamHoc,
-                LHP.GiangVien,
-                LHP.PhongHoc,
-                LHP.Thu,
-                LHP.TietBatDau,
-                LHP.TietKetThuc,
-                LHP.SiSoToiDa,
-                LHP.SiSoDaDangKy,
-                LHP.TrangThai,
-                (LHP.SiSoToiDa - LHP.SiSoDaDangKy) AS SoChoConLai
-            FROM LopHocPhan LHP
-            JOIN MonHoc MH ON LHP.MaMon = MH.MaMon
-            WHERE LHP.TrangThai = N'Đang mở'
-              AND (
-                    MH.MaMon LIKE ?
-                 OR MH.TenMon LIKE ?
-                 OR LHP.GiangVien LIKE ?
-              )
-            ORDER BY MH.TenMon
+        SELECT
+            cs.id,
+            c.course_name,
+            c.credits,
+            cs.classroom,
+            cs.schedule_day,
+            cs.start_period,
+            cs.end_period
+        FROM CourseSection cs
+        JOIN Course c ON cs.course_id = c.id
+        WHERE c.course_name LIKE ?
         """
 
-        cursor.execute(query, search_value, search_value, search_value)
+        cursor.execute(query, keyword)
         rows = cursor.fetchall()
 
         return rows_to_list(cursor, rows)
@@ -166,37 +138,28 @@ def search_courses(keyword: str):
         conn.close()
 
 
-def get_registered_courses(ma_sv: str):
+def get_registered_courses(user_id: int):
     conn = get_connection()
 
     try:
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                DK.MaDK,
-                DK.NgayDangKy,
-                DK.TrangThai AS TrangThaiDangKy,
-                LHP.MaLHP,
-                MH.MaMon,
-                MH.TenMon,
-                MH.SoTinChi,
-                LHP.HocKy,
-                LHP.NamHoc,
-                LHP.GiangVien,
-                LHP.PhongHoc,
-                LHP.Thu,
-                LHP.TietBatDau,
-                LHP.TietKetThuc
-            FROM DangKyHocPhan DK
-            JOIN LopHocPhan LHP ON DK.MaLHP = LHP.MaLHP
-            JOIN MonHoc MH ON LHP.MaMon = MH.MaMon
-            WHERE DK.MaSV = ?
-              AND DK.TrangThai <> N'Đã hủy'
-            ORDER BY LHP.Thu, LHP.TietBatDau
+         SELECT
+            cr.student_id,
+            cr.section_id,
+            c.course_name,
+            c.credits,
+            cr.registration_date,
+            cr.status
+        FROM CourseRegistration cr
+        JOIN Student s ON cr.student_id = s.id
+        JOIN CourseSection cs ON cr.section_id = cs.id
+        JOIN Course c ON cs.course_id = c.id
+        WHERE s.user_id = ?
         """
 
-        cursor.execute(query, ma_sv)
+        cursor.execute(query, user_id)
         rows = cursor.fetchall()
 
         return rows_to_list(cursor, rows)
@@ -205,30 +168,28 @@ def get_registered_courses(ma_sv: str):
         conn.close()
 
 
-def get_student_schedule(ma_sv: str):
+def get_student_schedule(user_id: int):
     conn = get_connection()
 
     try:
         cursor = conn.cursor()
 
         query = """
-            SELECT 
-                LHP.Thu,
-                LHP.TietBatDau,
-                LHP.TietKetThuc,
-                LHP.PhongHoc,
-                MH.TenMon,
-                MH.SoTinChi,
-                LHP.GiangVien
-            FROM DangKyHocPhan DK
-            JOIN LopHocPhan LHP ON DK.MaLHP = LHP.MaLHP
-            JOIN MonHoc MH ON LHP.MaMon = MH.MaMon
-            WHERE DK.MaSV = ?
-              AND DK.TrangThai <> N'Đã hủy'
-            ORDER BY LHP.Thu, LHP.TietBatDau
+        SELECT
+            c.course_name,
+            cs.schedule_day,
+            cs.start_period,
+            cs.end_period,
+            cs.classroom
+        FROM CourseRegistration cr
+        JOIN Student s ON cr.student_id = s.id
+        JOIN CourseSection cs ON cr.section_id = cs.id
+        JOIN Course c ON cs.course_id = c.id
+        WHERE s.user_id = ?
+        ORDER BY cs.schedule_day, cs.start_period
         """
 
-        cursor.execute(query, ma_sv)
+        cursor.execute(query, user_id)
         rows = cursor.fetchall()
 
         return rows_to_list(cursor, rows)

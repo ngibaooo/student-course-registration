@@ -190,3 +190,12 @@ ON CourseRegistration(student_id);
 
 CREATE INDEX IX_CourseRegistration_Section
 ON CourseRegistration(section_id);
+
+CREATE TABLE [User] (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    full_name NVARCHAR(100),
+    email VARCHAR(100),
+    [password] VARCHAR(255),
+    role VARCHAR(20),
+    status VARCHAR(20)
+);

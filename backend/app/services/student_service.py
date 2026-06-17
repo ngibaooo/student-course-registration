@@ -10,14 +10,14 @@ from app.repositories.student_repository import (
 )
 
 
-def get_profile_service(ma_sv: str):
-    if ma_sv is None:
+def get_profile_service(user_id: int):
+    if user_id is None:
         raise HTTPException(
             status_code=400,
-            detail="Token không có mã sinh viên"
+            detail="Token không có user_id"
         )
 
-    student = get_student_profile(ma_sv)
+    student = get_student_profile(user_id)
 
     if student is None:
         raise HTTPException(
@@ -32,8 +32,8 @@ def get_open_courses_service():
     return get_open_courses()
 
 
-def get_course_detail_service(ma_lhp: str):
-    course = get_course_detail(ma_lhp)
+def get_course_detail_service(section_id: int):
+    course = get_course_detail(section_id)
 
     if course is None:
         raise HTTPException(
@@ -51,9 +51,9 @@ def search_courses_service(keyword: str):
     return search_courses(keyword.strip())
 
 
-def get_registered_courses_service(ma_sv: str):
-    return get_registered_courses(ma_sv)
+def get_registered_courses_service(user_id: int):
+    return get_registered_courses(user_id)
 
 
-def get_student_schedule_service(ma_sv: str):
-    return get_student_schedule(ma_sv)
+def get_student_schedule_service(user_id: int):
+    return get_student_schedule(user_id)

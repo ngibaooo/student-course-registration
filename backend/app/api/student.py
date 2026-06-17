@@ -19,11 +19,11 @@ router = APIRouter(
 
 @router.get("/profile")
 def get_profile(current_user: dict = Depends(require_student)):
-    ma_sv = current_user.get("student_id")
+    user_id = current_user.get("user_id")
 
     return {
         "message": "Lấy thông tin cá nhân thành công",
-        "data": get_profile_service(ma_sv)
+        "data": get_profile_service(user_id)
     }
 
 
@@ -35,16 +35,15 @@ def get_open_courses_api(current_user: dict = Depends(require_student)):
     }
 
 
-@router.get("/open-courses/{ma_lhp}")
+@router.get("/open-courses/{section_id}")
 def get_course_detail_api(
-    ma_lhp: str,
+    section_id: int,
     current_user: dict = Depends(require_student)
 ):
     return {
         "message": "Lấy chi tiết lớp học phần thành công",
-        "data": get_course_detail_service(ma_lhp)
+        "data": get_course_detail_service(section_id)
     }
-
 
 @router.get("/search-courses")
 def search_courses_api(
@@ -61,11 +60,11 @@ def search_courses_api(
 def get_registered_courses_api(
     current_user: dict = Depends(require_student)
 ):
-    ma_sv = current_user.get("student_id")
+    user_id = current_user.get("user_id")
 
     return {
         "message": "Lấy danh sách học phần đã đăng ký thành công",
-        "data": get_registered_courses_service(ma_sv)
+        "data": get_registered_courses_service(user_id)
     }
 
 
@@ -73,9 +72,9 @@ def get_registered_courses_api(
 def get_schedule_api(
     current_user: dict = Depends(require_student)
 ):
-    ma_sv = current_user.get("student_id")
+    user_id = current_user.get("user_id")
 
     return {
         "message": "Lấy lịch học cá nhân thành công",
-        "data": get_student_schedule_service(ma_sv)
+        "data": get_student_schedule_service(user_id)
     }

@@ -4,13 +4,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.student import router as student_router
 
-
 app = FastAPI(
-    title="Student Course Registration System",
+    title="Student Course Registration API",
     description="API hệ thống quản lý sinh viên đăng ký học phần",
     version="1.0.0"
 )
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,7 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(auth_router)
 app.include_router(student_router)
