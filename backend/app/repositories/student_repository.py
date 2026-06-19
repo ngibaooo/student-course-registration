@@ -157,6 +157,7 @@ def get_registered_courses(user_id: int):
         JOIN CourseSection cs ON cr.section_id = cs.id
         JOIN Course c ON cs.course_id = c.id
         WHERE s.user_id = ?
+        AND cr.status = 'REGISTERED'
         """
 
         cursor.execute(query, user_id)
@@ -186,6 +187,7 @@ def get_student_schedule(user_id: int):
         JOIN CourseSection cs ON cr.section_id = cs.id
         JOIN Course c ON cs.course_id = c.id
         WHERE s.user_id = ?
+        AND cr.status = 'REGISTERED'
         ORDER BY cs.schedule_day, cs.start_period
         """
 
