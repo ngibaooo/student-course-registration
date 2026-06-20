@@ -1,26 +1,23 @@
-from app.database.connection import get_connection
+from sqlalchemy import text
+from app.database.connection import SessionLocal
 
 
-def rows_to_list(cursor, rows):
-    columns = [column[0] for column in cursor.description]
-    return [dict(zip(columns, row)) for row in rows]
-
-
-def row_to_dict(cursor, row):
+def row_to_dict(row):
     if row is None:
         return None
 
-    columns = [column[0] for column in cursor.description]
-    return dict(zip(columns, row))
+    return dict(row._mapping)
+
+
+def rows_to_list(rows):
+    return [dict(row._mapping) for row in rows]
 
 
 def get_student_profile(user_id: int):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
+        query = text("""
         SELECT
             s.id,
             u.full_name,
@@ -33,25 +30,22 @@ def get_student_profile(user_id: int):
         FROM Student s
         JOIN [User] u ON s.user_id = u.id
         LEFT JOIN Department d ON s.department_id = d.id
-        WHERE u.id = ?
-        """
+        WHERE u.id = :user_id
+        """)
 
-        cursor.execute(query, user_id)
-        row = cursor.fetchone()
+        result = db.execute(query, {"user_id": user_id})
 
-        return row_to_dict(cursor, row)
+        return row_to_dict(result.fetchone())
 
     finally:
-        conn.close()
+        db.close()
 
 
 def get_open_courses():
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
+        query = text("""
         SELECT
             cs.id,
             c.course_name,
@@ -68,24 +62,21 @@ def get_open_courses():
         JOIN Course c ON cs.course_id = c.id
         LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
         WHERE cs.status = 'ACTIVE'
-        """
+        """)
 
-        cursor.execute(query)
-        rows = cursor.fetchall()
+        result = db.execute(query)
 
-        return rows_to_list(cursor, rows)
+        return rows_to_list(result.fetchall())
 
     finally:
-        conn.close()
+        db.close()
 
 
 def get_course_detail(section_id: int):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
+        query = text("""
         SELECT
             cs.*,
             c.course_name,
@@ -95,27 +86,25 @@ def get_course_detail(section_id: int):
         FROM CourseSection cs
         JOIN Course c ON cs.course_id = c.id
         LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
-        WHERE cs.id = ?
-        """
+        WHERE cs.id = :section_id
+        """)
 
-        cursor.execute(query, section_id)
-        row = cursor.fetchone()
+        result = db.execute(
+            query,
+            {"section_id": section_id}
+        )
 
-        return row_to_dict(cursor, row)
+        return row_to_dict(result.fetchone())
 
     finally:
-        conn.close()
+        db.close()
 
 
 def search_courses(keyword: str):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        keyword = f"%{keyword}%"
-
-        query = """
+        query = text("""
         SELECT
             cs.id,
             c.course_name,
@@ -126,26 +115,26 @@ def search_courses(keyword: str):
             cs.end_period
         FROM CourseSection cs
         JOIN Course c ON cs.course_id = c.id
-        WHERE c.course_name LIKE ?
-        """
+        WHERE c.course_name LIKE :keyword
+        """)
 
-        cursor.execute(query, keyword)
-        rows = cursor.fetchall()
+        result = db.execute(
+            query,
+            {"keyword": f"%{keyword}%"}
+        )
 
-        return rows_to_list(cursor, rows)
+        return rows_to_list(result.fetchall())
 
     finally:
-        conn.close()
+        db.close()
 
 
 def get_registered_courses(user_id: int):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
-         SELECT
+        query = text("""
+        SELECT
             cr.student_id,
             cr.section_id,
             c.course_name,
@@ -156,26 +145,26 @@ def get_registered_courses(user_id: int):
         JOIN Student s ON cr.student_id = s.id
         JOIN CourseSection cs ON cr.section_id = cs.id
         JOIN Course c ON cs.course_id = c.id
-        WHERE s.user_id = ?
+        WHERE s.user_id = :user_id
         AND cr.status = 'REGISTERED'
-        """
+        """)
 
-        cursor.execute(query, user_id)
-        rows = cursor.fetchall()
+        result = db.execute(
+            query,
+            {"user_id": user_id}
+        )
 
-        return rows_to_list(cursor, rows)
+        return rows_to_list(result.fetchall())
 
     finally:
-        conn.close()
+        db.close()
 
 
 def get_student_schedule(user_id: int):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
+        query = text("""
         SELECT
             c.course_name,
             cs.schedule_day,
@@ -186,15 +175,17 @@ def get_student_schedule(user_id: int):
         JOIN Student s ON cr.student_id = s.id
         JOIN CourseSection cs ON cr.section_id = cs.id
         JOIN Course c ON cs.course_id = c.id
-        WHERE s.user_id = ?
+        WHERE s.user_id = :user_id
         AND cr.status = 'REGISTERED'
         ORDER BY cs.schedule_day, cs.start_period
-        """
+        """)
 
-        cursor.execute(query, user_id)
-        rows = cursor.fetchall()
+        result = db.execute(
+            query,
+            {"user_id": user_id}
+        )
 
-        return rows_to_list(cursor, rows)
+        return rows_to_list(result.fetchall())
 
     finally:
-        conn.close()
+        db.close()

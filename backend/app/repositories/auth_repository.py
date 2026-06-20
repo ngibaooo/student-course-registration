@@ -1,21 +1,20 @@
-from app.database.connection import get_connection
+from sqlalchemy import text
+
+from app.database.connection import SessionLocal
 
 
-def row_to_dict(cursor, row):
+def row_to_dict(row):
     if row is None:
         return None
 
-    columns = [column[0] for column in cursor.description]
-    return dict(zip(columns, row))
+    return dict(row._mapping)
 
 
 def get_account_by_username(username: str):
-    conn = get_connection()
+    db = SessionLocal()
 
     try:
-        cursor = conn.cursor()
-
-        query = """
+        query = text("""
             SELECT
                 id,
                 full_name,
@@ -24,13 +23,17 @@ def get_account_by_username(username: str):
                 role,
                 status
             FROM [User]
-            WHERE email = ?
-        """
+            WHERE email = :email
+        """)
 
-        cursor.execute(query, username)
-        row = cursor.fetchone()
+        result = db.execute(
+            query,
+            {"email": username}
+        )
 
-        return row_to_dict(cursor, row)
+        row = result.fetchone()
+
+        return row_to_dict(row)
 
     finally:
-        conn.close()
+        db.close()
