@@ -1,4 +1,7 @@
 from app.repositories.student.registration_repository import RegistrationRepository
+from app.repositories.student_repository import (
+    get_student_id_by_user_id
+)
 from fastapi import HTTPException
 
 class RegistrationService:
@@ -6,9 +9,17 @@ class RegistrationService:
     @staticmethod
     def register_course_section(
         db,
-        student_id,
+        # student_id,
+        user_id,
         section_id
     ):
+        student_id = get_student_id_by_user_id(user_id)
+
+        if student_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Không tìm thấy sinh viên"
+            )
         try:
 
             RegistrationRepository.register_course_section(
@@ -33,10 +44,16 @@ class RegistrationService:
     @staticmethod
     def cancel_course_section(
         db,
-        student_id,
+        user_id,
         section_id
     ):
+        student_id = get_student_id_by_user_id(user_id)
 
+        if student_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Không tìm thấy sinh viên"
+            )
         try: 
             RegistrationRepository.cancel_course_section(
                 db,

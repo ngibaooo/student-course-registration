@@ -12,7 +12,33 @@ def row_to_dict(row):
 def rows_to_list(rows):
     return [dict(row._mapping) for row in rows]
 
+def get_student_id_by_user_id(user_id: int):
 
+    db = SessionLocal()
+
+    try:
+
+        query = text("""
+        SELECT id
+        FROM Student
+        WHERE user_id = :user_id
+        """)
+
+        result = db.execute(
+            query,
+            {"user_id": user_id}
+        )
+
+        row = result.fetchone()
+
+        if row is None:
+            return None
+
+        return row.id
+
+    finally:
+        db.close()
+        
 def get_student_profile(user_id: int):
     db = SessionLocal()
 
