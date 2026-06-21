@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Học phần mở</title>
+
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/open-courses.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+
+        <!-- <div class="topbar">
+
+            <h1>Học phần mở</h1>
+
+            <div class="user-box">
+
+                <div>
+                    <div id="studentName">
+                        Sinh viên
+                    </div>
+
+                    <div id="studentId">
+                        MSSV
+                    </div>
+                </div>
+
+                <div class="avatar-small" id="avatar">
+                    A
+                </div>
+
+            </div>
+
+        </div> -->
+        <div id="topbar-container"></div>
+
+        <div class="course-container">
+
+            <div class="filter-bar">
+
+                <div class="search-box">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Tìm kiếm môn học..."
+                    >
+
+                </div>
+
+            </div>
+
+            <table class="course-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>Mã lớp học phần</th>
+                    <th>Tên môn học</th>
+                    <th>Số tín chỉ</th>
+                    <th>Giảng viên</th>
+                    <th>Lớp học dự kiến</th>
+                    <th>Lịch học</th>
+
+                    <th>Chỗ còn lại</th>
+                    <th>Thao tác</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="courseTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/sidebar.js"></script>
+<script src="../js/topbar.js"></script>
+<script src="../js/open-courses.js"></script>
+
+</body>
+</html>

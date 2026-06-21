@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Chi tiết học phần</title>
+
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/course-detail.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+
+        <div id="topbar-container"></div>
+
+        <div class="detail-wrapper">
+
+            <a href="open-courses.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+                Quay lại
+            </a>
+
+            <div class="detail-card">
+
+                <div class="header-section">
+
+                    <div>
+                        <h2 id="courseName">Loading...</h2>
+
+                        <p id="courseCode">
+                            Mã lớp học phần: ...
+                        </p>
+                    </div>
+
+                    <button
+                        class="register-btn"
+                        id="registerBtn"
+                    >
+                        Đăng ký học phần
+                    </button>
+
+                </div>
+
+                <div class="info-grid">
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-user"></i>
+
+                        <div>
+                            <span>Giảng viên</span>
+                            <strong id="lecturerName"></strong>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <div>
+                            <span>Phòng học</span>
+                            <strong id="classroom"></strong>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <div>
+                            <span>Học kỳ</span>
+                            <strong id="semester">
+                                HK1 2025-2026
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-bookmark"></i>
+
+                        <div>
+                            <span>Số tín chỉ</span>
+                            <strong id="credits"></strong>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-clock"></i>
+
+                        <div>
+                            <span>Lịch học</span>
+                            <strong id="schedule"></strong>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-users"></i>
+
+                        <div>
+                            <span>Sĩ số</span>
+                            <strong id="capacity"></strong>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <div class="description-section">
+
+                    <h3>Mô tả môn học</h3>
+
+                    <p id="description"></p>
+
+                </div>
+
+                <div class="note-box">
+
+                    <strong>Lưu ý:</strong>
+
+                    Sinh viên cần đảm bảo không trùng lịch học
+                    với các môn đã đăng ký trước khi đăng ký.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/sidebar.js"></script>
+<script src="../js/topbar.js"></script>
+<script src="../js/course-detail.js"></script>
+
+</body>
+</html>
