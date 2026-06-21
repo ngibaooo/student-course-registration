@@ -1,0 +1,139 @@
+:root{
+    --sidebar-width:240px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.logo{
+    width:40px;
+    height:40px;
+    background:#2563eb;
+    color:white;
+
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+
+.logout{
+    margin-top:auto;
+    border-top:1px solid #e5e7eb;
+}
+
+
+.sidebar{
+    /* width:240px; */
+    width:var(--sidebar-width);
+    height:100vh;
+
+    position:fixed;
+    left:0;
+    top:0;
+
+    background:#fff;
+    border-right:1px solid #e5e7eb;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-header{
+    padding:28px 24px;
+
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    border-bottom:1px solid #e5e7eb;
+}
+
+.student-icon{
+    width:42px;
+    height:42px;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    font-size:18px;
+}
+
+.sidebar-header h2{
+    font-size:20px;
+    font-weight:700;
+}
+
+.sidebar-header span{
+    font-size:14px;
+    color:#6b7280;
+}
+
+.menu{
+    padding-top:16px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    padding:14px 24px;
+
+    text-decoration:none;
+    color:#374151;
+
+    transition:0.2s;
+}
+
+.menu-item:hover{
+    background:#f3f4f6;
+}
+
+.menu-item.active{
+    background:#eef4ff;
+    color:#2563eb;
+    font-weight:600;
+}
+
+.menu-item i{
+    width:20px;
+}
+
+.logout-section{
+    margin-top:auto;
+    border-top:1px solid #e5e7eb;
+    padding:20px;
+}
+
+.logout-btn{
+    width:100%;
+
+    border:none;
+    background:none;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    display:flex;
+    gap:12px;
+    align-items:center;
+
+    color:#374151;
+    font-size:15px;
+}

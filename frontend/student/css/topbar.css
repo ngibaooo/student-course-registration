@@ -1,0 +1,50 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.topbar{
+    background:white;
+
+    padding:20px 30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border-bottom:1px solid #e5e7eb;
+
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.user-name{
+    font-weight:600;
+}
+
+.user-id{
+    color:#6b7280;
+    font-size:13px;
+}
+
+.avatar-small{
+    width:40px;
+    height:40px;
+
+    background:#2563eb;
+    color:white;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
