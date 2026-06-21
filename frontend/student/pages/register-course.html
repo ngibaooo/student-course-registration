@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/register-course.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+   <div class="container">
+
+        <div id="sidebar-container"></div>
+
+        <div class="main">
+
+            <div id="topbar-container"></div>
+
+            <div class="register-container">
+
+                <div class="register-header">
+
+                    <h2>Đăng ký học phần</h2>
+
+                </div>
+
+                <table class="course-table">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Chọn</th>
+                        <th>Mã lớp học phần</th>
+                        <th>Tên môn học</th>
+                        <th>Giảng viên</th>
+                        <th>Tín chỉ</th>
+                        <th>Lịch học</th>
+                        <th>Chỗ còn lại</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="courseTableBody">
+
+                    </tbody>
+
+                </table>
+
+                <div class="register-footer">
+
+                    <div class="summary">
+
+                        <p>
+                            Đã chọn:
+                            <strong id="selectedCount">0</strong>
+                            môn học
+                        </p>
+
+                        <p>
+                            Tổng tín chỉ:
+                            <strong id="totalCredits">0</strong>
+                        </p>
+
+                    </div>
+
+                    <button
+                        id="registerBtn"
+                        class="register-btn"
+                    >
+                        Đăng ký học phần
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/topbar.js"></script>
+    <script src="../js/register-course.js"></script>
+</body>
+
+</html>

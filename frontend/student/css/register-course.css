@@ -1,0 +1,77 @@
+body{
+    background:#f5f6fa;
+}
+
+.main{
+    flex:1;
+    margin-left:var(--sidebar-width);
+}
+
+.register-container{
+    background:white;
+
+    margin:30px;
+    padding:25px;
+
+    border-radius:15px;
+}
+
+.register-header{
+    margin-bottom:25px;
+}
+
+.course-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.course-table th,
+.course-table td{
+    padding:16px 10px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+.course-table input[type="checkbox"]{
+    width:18px;
+    height:18px;
+}
+
+.available{
+    color:#16a34a;
+    font-weight:600;
+}
+
+.full{
+    color:#dc2626;
+    font-weight:600;
+}
+
+.register-footer{
+    margin-top:25px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.summary p{
+    margin-bottom:8px;
+}
+
+.register-btn{
+    border:none;
+
+    background:#2563eb;
+    color:white;
+
+    padding:12px 24px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+}
+
+.register-btn:hover{
+    background:#1d4ed8;
+}
