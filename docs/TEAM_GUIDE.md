@@ -6,18 +6,48 @@
 student-registration-system/
 │
 ├── backend/
-├── frontend/
-├── database/
+│   └── app/
+│       ├── api (chứa endpoint APIs)
+│       ├── database (kết nối SQL Server, transaction, session)
+│       ├── models (entity mapping - chỉ dùng khi sử dụng SQLAlchemy tự sinh query)
+│       ├── repositories (chứa các câu query SQL Server)
+│       ├── schemas (validate request frontend gửi lên xem có đủ request không)
+│       └── services (xử lí logic nghiệp vụ)
+│   └── main.py (start FastAPI)
+├── frontend/ 
+├── database/ (chứa scripts db - mỗi khi có file nào mới sẽ pull về và copy paste vào sql server và run để đồng bộ db với nhau)
 │   ├── schema.sql
-│   └── seed_data.sql
+│   ├── seed_data.sql
+│   ├── functions.sql
+│   ├── triggers.sql
+│   └── procedures.sql
 │
-├── docs/
+├── docs/ (đọc các file tài liệu trong này để thống nhất cách code với nhau & hiểu về hệ thống)
 │   ├── api-design.md
 │   └── TEAM_GUIDE.md
 │
-└── README.md
+├── README.md
+├── .env.example (file ví dụ để cấu hình môi trường. Khi clone code về đổi tên file này thành .env và đổi DB_SERVER phù hợp với sql server trên máy cá nhân)
+├── .gitignore
+└── requirements.txt (chứa các thư viện cần thiết cho web. Khi clone về run: pip install -r requirements.txt để IDE tự động cài các thư viện trong đó)
 ```
 
+## Git Branch Strategy
+
+develop
+│
+├── feature/leader-registration
+├── feature/admin-module
+├── feature/student-module
+├── feature/frontend
+└── feature/documentation
+
+Quy tắc:
+
+- Không commit trực tiếp lên develop.
+- Mỗi thành viên chỉ làm việc trên branch của mình.
+- Sau khi hoàn thành chức năng, tạo Pull Request vào develop.
+- Leader review và merge.
 ---
 
 # Team Assignment
@@ -157,22 +187,45 @@ refactor: clean service layer
 
 ---
 
-# Database Setup
+## Setup Project
 
-1. Run:
+### 1. Clone repository
 
-```text
+git clone <repository-url>
+
+### 2. Cài thư viện
+
+pip install -r requirements.txt
+
+### 3. Tạo file môi trường
+
+Copy:
+
+.env.example
+
+thành:
+
+.env
+
+Sau đó chỉnh:
+
+DB_SERVER
+DB_NAME
+DB_USERNAME
+DB_PASSWORD
+
+theo SQL Server trên máy cá nhân.
+
+### 4. Khởi tạo database
+
+Chạy lần lượt:
+
 database/schema.sql
-```
 
-2. Then:
-
-```text
 database/seed_data.sql
-```
 
-* Database name:
+database/functions.sql
 
-```text
-StudentRegistrationDB
-```
+database/triggers.sql
+
+database/procedures.sql
