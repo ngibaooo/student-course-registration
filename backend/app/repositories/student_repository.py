@@ -126,6 +126,33 @@ def get_course_detail(section_id: int):
         db.close()
 
 
+# def search_courses(keyword: str):
+#     db = SessionLocal()
+
+#     try:
+#         query = text("""
+#         SELECT
+#             cs.id,
+#             c.course_name,
+#             c.credits,
+#             cs.classroom,
+#             cs.schedule_day,
+#             cs.start_period,
+#             cs.end_period
+#         FROM CourseSection cs
+#         JOIN Course c ON cs.course_id = c.id
+#         WHERE c.course_name LIKE :keyword
+#         """)
+
+#         result = db.execute(
+#             query,
+#             {"keyword": f"%{keyword}%"}
+#         )
+
+#         return rows_to_list(result.fetchall())
+
+#     finally:
+#         db.close()
 def search_courses(keyword: str):
     db = SessionLocal()
 
@@ -135,13 +162,22 @@ def search_courses(keyword: str):
             cs.id,
             c.course_name,
             c.credits,
+            l.full_name AS lecturer_name,
             cs.classroom,
             cs.schedule_day,
             cs.start_period,
-            cs.end_period
+            cs.end_period,
+            cs.maximum_students,
+            cs.registered_students,
+            (cs.maximum_students - cs.registered_students) AS available_slots
         FROM CourseSection cs
-        JOIN Course c ON cs.course_id = c.id
-        WHERE c.course_name LIKE :keyword
+        JOIN Course c
+            ON cs.course_id = c.id
+        LEFT JOIN Lecturer l
+            ON cs.lecturer_id = l.id
+        WHERE
+            cs.status = 'ACTIVE'
+            AND c.course_name LIKE :keyword
         """)
 
         result = db.execute(
