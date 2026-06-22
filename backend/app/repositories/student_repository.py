@@ -108,9 +108,12 @@ def get_course_detail(section_id: int):
             c.course_name,
             c.credits,
             c.description,
-            l.full_name AS lecturer_name
+            l.full_name AS lecturer_name,
+            s.semester_name,
+            s.academic_year
         FROM CourseSection cs
         JOIN Course c ON cs.course_id = c.id
+        JOIN Semester s ON cs.semester_id = s.id
         LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
         WHERE cs.id = :section_id
         """)
@@ -201,12 +204,15 @@ def get_registered_courses(user_id: int):
             cr.section_id,
             c.course_name,
             c.credits,
+            sem.semester_name,
+            sem.academic_year,
             cr.registration_date,
             cr.status
         FROM CourseRegistration cr
         JOIN Student s ON cr.student_id = s.id
         JOIN CourseSection cs ON cr.section_id = cs.id
         JOIN Course c ON cs.course_id = c.id
+         JOIN Semester sem ON cs.semester_id = sem.id
         WHERE s.user_id = :user_id
         AND cr.status = 'REGISTERED'
         """)
