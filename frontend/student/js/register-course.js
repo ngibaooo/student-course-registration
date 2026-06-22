@@ -14,27 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             registerCourses
         );
 });
-
-// async function loadCourses() {
-
-//     const token =
-//         localStorage.getItem("access_token");
-
-//     const response = await fetch(
-//         "http://localhost:8000/api/student/open-courses",
-//         {
-//             headers:{
-//                 Authorization:`Bearer ${token}`
-//             }
-//         }
-//     );
-
-//     const result = await response.json();
-
-//     courses = result.data;
-
-//     renderCourses();
-// }
 async function loadCourses() {
 
     const token =
@@ -182,13 +161,72 @@ function attachCheckboxEvents() {
 
     });
 }
-async function registerCourses() {
+// async function registerCourses() {
 
+//     if(selectedCourses.length === 0){
+
+//         alert(
+//             "Vui lòng chọn học phần"
+//         );
+
+//         return;
+//     }
+
+//     const token =
+//         localStorage.getItem(
+//             "access_token"
+//         );
+
+//     try {
+
+//         for(const sectionId of selectedCourses){
+
+//             await fetch(
+//                 "http://localhost:8000/registrations",
+//                 {
+//                     method:"POST",
+
+//                     headers:{
+//                         "Content-Type":
+//                             "application/json",
+
+//                         Authorization:
+//                             `Bearer ${token}`
+//                     },
+
+//                     body: JSON.stringify({
+//                         section_id: sectionId
+//                     })
+//                 }
+//             );
+//         }
+
+//         alert(
+//             "Đăng ký học phần thành công"
+//         );
+
+//         location.reload();
+
+//     }
+//     catch(error){
+
+//         console.error(error);
+
+//         alert(
+//             "Đăng ký thất bại"
+//         );
+//     }
+// }
+async function registerCourses() {
+    const errorBox =
+        document.getElementById(
+            "registerError"
+        );
+
+    errorBox.textContent = "";
     if(selectedCourses.length === 0){
 
-        alert(
-            "Vui lòng chọn học phần"
-        );
+        alert("Vui lòng chọn học phần");
 
         return;
     }
@@ -202,24 +240,37 @@ async function registerCourses() {
 
         for(const sectionId of selectedCourses){
 
-            await fetch(
-                "http://localhost:8000/registrations",
-                {
-                    method:"POST",
+            const response =
+                await fetch(
+                    "http://localhost:8000/registrations",
+                    {
+                        method:"POST",
 
-                    headers:{
-                        "Content-Type":
-                            "application/json",
+                        headers:{
+                            "Content-Type":
+                                "application/json",
 
-                        Authorization:
-                            `Bearer ${token}`
-                    },
+                            Authorization:
+                                `Bearer ${token}`
+                        },
 
-                    body: JSON.stringify({
-                        section_id: sectionId
-                    })
-                }
-            );
+                        body: JSON.stringify({
+                            section_id: sectionId
+                        })
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            // Backend trả lỗi
+            if(!response.ok){
+
+                throw new Error(
+                    result.detail ||
+                    "Đăng ký thất bại"
+                );
+            }
         }
 
         alert(
@@ -233,8 +284,6 @@ async function registerCourses() {
 
         console.error(error);
 
-        alert(
-            "Đăng ký thất bại"
-        );
+        alert(error.message);
     }
 }
