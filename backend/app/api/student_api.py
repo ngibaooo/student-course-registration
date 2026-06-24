@@ -7,7 +7,9 @@ from app.services.student_service import (
     get_course_detail_service,
     search_courses_service,
     get_registered_courses_service,
-    get_student_schedule_service
+    get_student_schedule_service,
+    get_semesters_service,
+    get_open_courses_by_semester_service
 )
 
 
@@ -77,4 +79,24 @@ def get_schedule_api(
     return {
         "message": "Lấy lịch học cá nhân thành công",
         "data": get_student_schedule_service(user_id)
+    }
+
+@router.get("/semesters")
+def get_semesters():
+
+    return {
+        "message": "Lấy danh sách học kỳ thành công",
+        "data": get_semesters_service()
+    }
+
+@router.get("/open-courses-by-semester")
+def get_open_courses_by_semester_api(
+    semester_id: int,
+    current_user: dict = Depends(require_student)
+):
+    return {
+        "message": "Lấy danh sách học phần theo học kỳ thành công",
+        "data": get_open_courses_by_semester_service(
+            semester_id
+        )
     }
