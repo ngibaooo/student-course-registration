@@ -26,7 +26,10 @@ SELECT
 
     cr.registration_date,
 
-    cr.status
+    cr.status,
+
+    sem.semester_name,
+    sem.academic_year
 
 FROM CourseRegistration cr
 
@@ -41,6 +44,8 @@ JOIN CourseSection cs
 
 JOIN Course c
     ON cs.course_id = c.id
+
+JOIN Semester sem ON cs.semester_id = sem.id 
 
 WHERE cr.status = 'REGISTERED';
 GO

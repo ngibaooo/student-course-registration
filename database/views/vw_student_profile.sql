@@ -10,7 +10,6 @@ AS
 SELECT
     u.id AS user_id,
     s.id AS student_id,
-    u.username,
     u.full_name,
     u.email,
 
@@ -18,6 +17,7 @@ SELECT
     s.gender,
     s.phone,
     s.address,
+    s.enrollment_year,
 
     d.id AS department_id,
     d.department_name

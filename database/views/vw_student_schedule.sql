@@ -17,8 +17,12 @@ SELECT
     cs.start_period,
     cs.end_period,
 
+    l.full_name AS lecturer_name,
+
     sem.semester_name,
-    sem.academic_year
+    sem.academic_year,
+    sem.start_date,
+    sem.end_date 
 
 FROM CourseRegistration cr
 
@@ -37,5 +41,8 @@ JOIN Course c
 JOIN Semester sem
     ON cs.semester_id = sem.id
 
-WHERE cr.status = 'REGISTERED';
+LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
+
+WHERE cr.status = 'REGISTERED'
+AND GETDATE() BETWEEN sem.start_date AND sem.end_date;
 GO
