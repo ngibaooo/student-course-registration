@@ -1,4 +1,5 @@
 const TOTAL_PERIODS = 10;
+let currentWeekOffset = 0;
 const CA_HOC = [
     {
         ca: 1,
@@ -35,8 +36,36 @@ const CA_HOC = [
 let schedules = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
+    document
+        .getElementById(
+            "prevWeekBtn"
+        )
+        .addEventListener(
+            "click",
+            () => {
 
+                currentWeekOffset--;
+
+                renderWeekHeader();
+            }
+        );
+
+    document
+        .getElementById(
+            "nextWeekBtn"
+        )
+        .addEventListener(
+            "click",
+            () => {
+
+                currentWeekOffset++;
+
+                renderWeekHeader();
+            }
+        );
     await loadTopbar("Lịch học cá nhân");
+
+    renderWeekHeader();
 
     await loadSchedule();
 
@@ -208,4 +237,180 @@ function renderSchedule(){
 
         tbody.innerHTML += row;
     });
+}
+// function renderWeekHeader(){
+
+//     const headerRow =
+//         document.getElementById(
+//             "scheduleHeaderRow"
+//         );
+
+//     const weekInfo =
+//         document.getElementById(
+//             "weekInfo"
+//         );
+
+//     const today = new Date();
+
+//     const currentDay =
+//         today.getDay();
+
+//     const monday =
+//         new Date(today);
+
+//     monday.setDate(
+//         today.getDate() -
+//         (
+//             currentDay === 0
+//                 ? 6
+//                 : currentDay - 1
+//         )
+//     );
+
+//     const sunday =
+//         new Date(monday);
+
+//     sunday.setDate(
+//         monday.getDate() + 6
+//     );
+
+//     weekInfo.textContent =
+//         `Tuần hiện tại: ${formatDate(monday)}
+//          - ${formatDate(sunday)}`;
+
+//     headerRow.innerHTML =
+//         `<th>Ca học</th>`;
+
+//     const dayNames = [
+//         "Thứ 2",
+//         "Thứ 3",
+//         "Thứ 4",
+//         "Thứ 5",
+//         "Thứ 6",
+//         "Thứ 7",
+//         "Chủ nhật"
+//     ];
+
+//     for(let i = 0; i < 7; i++){
+
+//         const date =
+//             new Date(monday);
+
+//         date.setDate(
+//             monday.getDate() + i
+//         );
+
+//         headerRow.innerHTML += `
+//             <th>
+//                 ${dayNames[i]}
+//                 <br>
+//                 <small>
+//                     ${formatDate(date)}
+//                 </small>
+//             </th>
+//         `;
+//     }
+// }
+function renderWeekHeader(){
+
+    const headerRow =
+        document.getElementById(
+            "scheduleHeaderRow"
+        );
+
+    const weekInfo =
+        document.getElementById(
+            "weekInfo"
+        );
+
+    const today =
+        new Date();
+
+    const currentDay =
+        today.getDay();
+
+    const monday =
+        new Date(today);
+
+    monday.setDate(
+        today.getDate()
+        -
+        (
+            currentDay === 0
+                ? 6
+                : currentDay - 1
+        )
+    );
+
+    monday.setDate(
+        monday.getDate()
+        +
+        currentWeekOffset * 7
+    );
+
+    const sunday =
+        new Date(monday);
+
+    sunday.setDate(
+        monday.getDate() + 6
+    );
+
+    weekInfo.textContent =
+        `${formatDate(monday)}
+         - 
+         ${formatDate(sunday)}`;
+
+    headerRow.innerHTML =
+        `<th>Ca học</th>`;
+
+    const dayNames = [
+        "Thứ 2",
+        "Thứ 3",
+        "Thứ 4",
+        "Thứ 5",
+        "Thứ 6",
+        "Thứ 7",
+        "CN"
+    ];
+
+    for(let i=0;i<7;i++){
+
+        const date =
+            new Date(monday);
+
+        date.setDate(
+            monday.getDate()+i
+        );
+
+        headerRow.innerHTML += `
+            <th>
+                ${dayNames[i]}
+                <br>
+                <small>
+                    ${formatDate(date)}
+                </small>
+            </th>
+        `;
+    }
+}
+
+function formatDate(date){
+
+    // return date
+    //     .toLocaleDateString(
+    //         "vi-VN",
+    //         {
+    //             day:"2-digit",
+    //             month:"2-digit"
+    //         }
+    //     );
+    return date
+        .toLocaleDateString(
+            "vi-VN",
+            {
+                day:"2-digit",
+                month:"2-digit",
+                year:"numeric"
+            }
+        );
 }

@@ -67,13 +67,52 @@ async function loadCourseDetail() {
         document.getElementById("description").textContent =
             course.description;
 
-        if (available <= 0) {
+        // if (available <= 0) {
 
-            const btn =
-                document.getElementById("registerBtn");
+        //     const btn =
+        //         document.getElementById("registerBtn");
+
+        //     btn.disabled = true;
+        //     btn.textContent = "Lớp đã đầy";
+        // }
+        const btn =
+            document.getElementById(
+                "registerBtn"
+            );
+
+        if(
+            course.semester_status === "CLOSED"
+        ){
 
             btn.disabled = true;
-            btn.textContent = "Lớp đã đầy";
+
+            btn.textContent =
+                "Học kỳ đã đóng";
+
+             const warning =
+                document.getElementById(
+                    "semesterWarning"
+                );
+
+            warning.style.display =
+                "block";
+
+            warning.textContent =
+                "Sinh viên không được phép đăng ký học phần trong học kỳ này.";
+        }
+        else if(available <= 0){
+
+            btn.disabled = true;
+
+            btn.textContent =
+                "Lớp đã đầy";
+        }
+        else{
+
+            btn.disabled = false;
+
+            btn.textContent =
+                "Đăng ký học phần";
         }
         const registerBtn =
             document.getElementById("registerBtn");

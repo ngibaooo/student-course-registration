@@ -112,3 +112,46 @@
 
     margin-top:6px;
 }
+.week-info{
+    margin-bottom:20px;
+
+    font-size:14px;
+    font-weight:600;
+
+    color:#2563eb;
+}
+.week-navigation{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    gap:20px;
+
+    margin-top:15px;
+    margin-bottom:20px;
+}
+
+.week-navigation button{
+
+    padding:8px 16px;
+
+    border:none;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    background:#2563eb;
+    color:white;
+}
+
+.week-navigation button:hover{
+
+    background:#1d4ed8;
+}
+
+#weekInfo{
+
+    font-weight:600;
+}

@@ -28,11 +28,25 @@
 
             <div class="schedule-header">
                 <h2>Lịch học cá nhân</h2>
+                <div class="week-navigation">
+
+                    <button id="prevWeekBtn">
+                        ← Tuần trước
+                    </button>
+
+                    <div id="weekInfo"></div>
+
+                    <button id="nextWeekBtn">
+                        Tuần sau →
+                    </button>
+
+                </div>
             </div>
+            <div class="week-info" id="weekInfo"></div>
 
             <table class="schedule-table">
 
-                <thead>
+                <!-- <thead>
 
                 <tr>
                     <th>Ca học</th>
@@ -45,6 +59,11 @@
                     <th>Chủ nhật</th>
                 </tr>
 
+                </thead> -->
+                <thead>
+                <tr id="scheduleHeaderRow">
+
+                </tr>
                 </thead>
 
                 <tbody id="scheduleBody">

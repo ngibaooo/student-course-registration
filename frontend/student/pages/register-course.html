@@ -31,7 +31,26 @@
 
                 </div>
 
-                <table class="course-table">
+                <div class="semester-filter">
+
+                    <label>Học kỳ đăng ký</label>
+
+                    <select id="semesterSelect">
+
+                        <option value="">
+                            Chọn học kỳ
+                        </option>
+
+                    </select>
+
+                </div>
+                
+                <div
+                    id="semesterWarning"
+                    class="semester-warning"
+                    style="display:none;"
+                ></div>
+                <!-- <table class="course-table">
 
                     <thead>
 
@@ -82,6 +101,57 @@
                     >
                         Đăng ký học phần
                     </button>
+
+                </div> -->
+                <div id="courseSection" style="display:none;">
+
+                    <table class="course-table">
+
+                        <thead>
+                            <tr>
+                                <th>Chọn</th>
+                                <th>Mã lớp học phần</th>
+                                <th>Tên môn học</th>
+                                <th>Giảng viên</th>
+                                <th>Tín chỉ</th>
+                                <th>Lịch học</th>
+                                <th>Chỗ còn lại</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="courseTableBody"></tbody>
+
+                    </table>
+
+                    <div class="register-footer">
+
+                        <div class="summary">
+
+                            <p>
+                                Đã chọn:
+                                <strong id="selectedCount">0</strong>
+                                môn học
+                            </p>
+
+                            <p>
+                                Tổng tín chỉ:
+                                <strong id="totalCredits">0</strong>
+                            </p>
+
+                        </div>
+                         <div
+                            id="registerError"
+                            class="register-error"
+                        ></div>
+                        <button
+                            id="registerBtn"
+                            class="register-btn"
+                        >
+                            Đăng ký học phần
+                        </button>
+
+                    </div>
 
                 </div>
 

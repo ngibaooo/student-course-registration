@@ -58,6 +58,8 @@ async function loadProfile() {
 
         document.getElementById("gender").textContent =
             student.gender;
+        document.getElementById("enrollmentYear").textContent =
+            student.enrollment_year;
 
         const initials = getInitials(student.full_name);
         
