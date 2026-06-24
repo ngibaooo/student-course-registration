@@ -87,9 +87,12 @@ def get_course_detail(section_id: int):
             c.course_name,
             c.credits,
             c.description,
-            l.full_name AS lecturer_name
+            l.full_name AS lecturer_name,
+            sem.academic_year,
+            sem.status AS semester_status
         FROM CourseSection cs
         JOIN Course c ON cs.course_id = c.id
+        JOIN Semester sem ON cs.semester_id = sem.id
         LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
         WHERE cs.id = :section_id
         """)
