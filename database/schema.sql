@@ -36,6 +36,9 @@ gender VARCHAR(10)
 phone VARCHAR(20),
 address NVARCHAR(255),
 
+-- update 24/06 thêm cột năm khóa học để biết năm nhập học
+enrollment_year INT NOT NULL,
+
 department_id INT NOT NULL,
 user_id INT NOT NULL UNIQUE,
 
