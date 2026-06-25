@@ -61,9 +61,11 @@ class StudentRepository:
                 a.gender,
                 a.phone,
                 a.address,
-                a.department_id
+                a.department_id,
+                d.department_name
             from Student a
             join [user] b on a.user_id =b.id
+            join Department d on a.department_id=d.id
             where b.full_name LIKE :keyword
         """)
         return db.execute(

@@ -104,6 +104,21 @@ def update_course(
             detail=str(e)
         )
 
+@router.patch("/{course_id}/enable")
+def enable_course(
+    course_id: int,
+    db: Session = Depends(get_db)
+):
+    try:
+        return CourseService.enable(
+            db,
+            course_id
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
 @router.patch("/{course_id}/disable")
 def disable_course(

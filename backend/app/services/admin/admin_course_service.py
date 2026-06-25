@@ -113,6 +113,41 @@ class CourseService:
 
             db.rollback()
             raise e
+        
+    @staticmethod
+    def enable(
+        db,
+        course_id
+    ):
+
+        try:
+
+            course = CourseRepository.get_by_id(
+                db,
+                course_id
+            )
+
+            if not course:
+                raise Exception(
+                    "Course not found"
+                )
+
+            CourseRepository.enable(
+                db,
+                course_id
+            )
+
+            db.commit()
+
+            return {
+                "message":
+                "Course enable successfully"
+            }
+
+        except Exception as e:
+
+            db.rollback()
+            raise e
 
     @staticmethod
     def search(

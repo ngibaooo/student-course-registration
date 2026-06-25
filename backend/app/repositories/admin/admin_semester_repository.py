@@ -148,3 +148,32 @@ class SemesterRepository:
             query,
             {"id": semester_id}
         )
+    
+    @staticmethod
+    def search_by_academic_year(
+        db,
+        academic_year
+    ):
+
+        query = text("""
+            SELECT
+                id,
+                semester_name,
+                academic_year,
+                start_date,
+                end_date,
+                registration_open_date,
+                registration_close_date,
+                cancel_deadline,
+                status
+            FROM Semester
+            WHERE academic_year LIKE :academic_year
+            ORDER BY id
+        """)
+
+        return db.execute(
+            query,
+            {
+                "academic_year": f"%{academic_year}%"
+            }
+        ).mappings().all()

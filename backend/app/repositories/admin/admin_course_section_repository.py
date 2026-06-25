@@ -8,20 +8,34 @@ class CourseSectionRepository:
 
         query = text("""
             SELECT
-                id,
-                classroom,
-                schedule_day,
-                start_period,
-                end_period,
-                maximum_students,
-                registered_students,
-                status,
-                semester_id,
-                course_id,
-                lecturer_id
-            FROM CourseSection
-            ORDER BY id
+                cs.id,
+                cs.classroom,
+                cs.schedule_day,
+                cs.start_period,
+                cs.end_period,
+                cs.maximum_students,
+                cs.registered_students,
+                cs.status,
+
+                cs.semester_id,
+
+                cs.course_id,
+                c.course_name,
+
+                cs.lecturer_id,
+                l.full_name AS lecturer_name
+
+            FROM CourseSection cs
+
+            JOIN Course c
+                ON cs.course_id = c.id
+
+            JOIN Lecturer l
+                ON cs.lecturer_id = l.id
+
+            ORDER BY cs.id
         """)
+       
 
         return db.execute(
             query
@@ -32,11 +46,36 @@ class CourseSectionRepository:
         db,
         section_id
     ):
-
         query = text("""
-            SELECT *
-            FROM CourseSection
-            WHERE id=:id
+            SELECT
+
+                cs.id,
+                cs.classroom,
+                cs.schedule_day,
+                cs.start_period,
+                cs.end_period,
+                cs.maximum_students,
+                cs.registered_students,
+                cs.status,
+
+                cs.semester_id,
+
+                cs.course_id,
+                c.course_name,
+
+                cs.lecturer_id,
+                l.full_name AS lecturer_name
+
+
+            FROM CourseSection cs
+
+            JOIN Course c
+                ON cs.course_id = c.id
+
+            JOIN Lecturer l
+                ON cs.lecturer_id = l.id
+
+            WHERE cs.id=:id
         """)
 
         return db.execute(
@@ -131,6 +170,23 @@ class CourseSectionRepository:
         )
 
     @staticmethod
+    def enable(
+        db,
+        section_id
+    ):
+
+        query = text("""
+            UPDATE CourseSection
+            SET status='ACTIVE'
+            WHERE id=:id
+        """)
+
+        db.execute(
+            query,
+            {"id": section_id}
+        )
+
+    @staticmethod
     def search(
         db,
         keyword
@@ -138,17 +194,36 @@ class CourseSectionRepository:
 
         query = text("""
             SELECT
+
                 cs.id,
+
                 c.course_name,
+
                 cs.classroom,
                 cs.schedule_day,
                 cs.start_period,
                 cs.end_period,
+
+                l.full_name AS lecturer_name,
+
                 cs.status
+
+
             FROM CourseSection cs
+
+
             JOIN Course c
                 ON cs.course_id = c.id
-            WHERE c.course_name LIKE :keyword
+
+
+            JOIN Lecturer l
+                ON cs.lecturer_id = l.id
+
+
+            WHERE 
+                c.course_name LIKE :keyword
+                OR l.full_name LIKE :keyword
+
         """)
 
         return db.execute(

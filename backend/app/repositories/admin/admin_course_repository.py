@@ -88,6 +88,19 @@ class CourseRepository:
         )
 
     @staticmethod
+    def enable(db, course_id):
+        query = text("""
+            UPDATE Course
+            SET status='ACTIVE'
+            WHERE id=:id
+        """)
+
+        db.execute(
+            query,
+            {"id": course_id}
+        )
+
+    @staticmethod
     def search(db, keyword):
         query = text("""
             SELECT

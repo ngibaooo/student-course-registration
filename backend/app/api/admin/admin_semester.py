@@ -26,6 +26,16 @@ router = APIRouter(
     dependencies=[Depends(require_admin)]
 )
 
+@router.get("/search")
+def search_semester(
+    academic_year: str,
+    db: Session = Depends(get_db)
+):
+
+    return SemesterRepository.search_by_academic_year(
+        db,
+        academic_year
+    )
 
 @router.get("")
 def get_all_semesters(

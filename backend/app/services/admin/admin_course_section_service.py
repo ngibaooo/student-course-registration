@@ -123,6 +123,41 @@ class CourseSectionService:
 
             db.rollback()
             raise e
+        
+    @staticmethod
+    def enable(
+        db,
+        section_id
+    ):
+
+        try:
+
+            section = CourseSectionRepository.get_by_id(
+                db,
+                section_id
+            )
+
+            if not section:
+                raise Exception(
+                    "Course section not found"
+                )
+
+            CourseSectionRepository.enable(
+                db,
+                section_id
+            )
+
+            db.commit()
+
+            return {
+                "message":
+                "Course section enable successfully"
+            }
+
+        except Exception as e:
+
+            db.rollback()
+            raise e
 
     @staticmethod
     def search(

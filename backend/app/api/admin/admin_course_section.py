@@ -86,3 +86,13 @@ def disable_section(
         db,
         section_id
     )
+
+@router.patch("/{section_id}/enable")
+def enable_section(
+    section_id: int,
+    db: Session = Depends(get_db)
+):
+    return CourseSectionService.enable(
+        db,
+        section_id
+    )
