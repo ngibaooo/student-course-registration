@@ -41,3 +41,25 @@ class RegistrationRepository:
                 "section_id": section_id
             }
         )
+
+# DEMO LỖI
+## Lost Update
+    @staticmethod
+    def register_course_section_lost_update(
+        db,
+        student_id: int,
+        section_id: int
+    ):
+        query = text("""
+            EXEC sp_register_course_section_lost_update
+                @StudentId = :student_id,
+                @SectionId = :section_id
+        """)
+
+        db.execute(
+            query,
+            {
+                "student_id": student_id,
+                "section_id": section_id
+            }
+        )
