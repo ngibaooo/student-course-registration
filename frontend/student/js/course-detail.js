@@ -179,7 +179,7 @@ async function registerCourse(sectionId) {
         );
 
         window.location.href =
-            "open-courses.html";
+            "register-course.html";
 
     }
     catch(error){

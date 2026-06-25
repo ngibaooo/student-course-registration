@@ -1,5 +1,18 @@
 let registeredCourses = [];
+let semesters = [];
 
+// document.addEventListener(
+//     "DOMContentLoaded",
+//     async () => {
+
+//         await loadTopbar(
+//             "Học phần đã đăng ký"
+//         );
+
+//         await loadRegisteredCourses();
+
+//     }
+// );
 document.addEventListener(
     "DOMContentLoaded",
     async () => {
@@ -8,12 +21,76 @@ document.addEventListener(
             "Học phần đã đăng ký"
         );
 
-        await loadRegisteredCourses();
+        await loadSemesters();
 
+        document
+            .getElementById(
+                "semesterSelect"
+            )
+            .addEventListener(
+                "change",
+                handleSemesterChange
+            );
     }
 );
+async function handleSemesterChange(){
 
-async function loadRegisteredCourses(){
+    const semesterId =
+        document.getElementById(
+            "semesterSelect"
+        ).value;
+
+    if(!semesterId){
+
+        registeredCourses = [];
+
+        renderCourses();
+
+        updateSummary();
+
+        return;
+    }
+
+    await loadRegisteredCourses(
+        semesterId
+    );
+}
+async function loadSemesters(){
+
+    const token =
+        localStorage.getItem("access_token");
+
+    const response =
+        await fetch(
+            "http://localhost:8000/api/student/semesters",
+            {
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            }
+        );
+
+    const result =
+        await response.json();
+
+    semesters = result.data;
+
+    const select =
+        document.getElementById(
+            "semesterSelect"
+        );
+
+    result.data.forEach(item => {
+
+        select.innerHTML += `
+            <option value="${item.id}">
+                ${item.semester_name}
+                ${item.academic_year}
+            </option>
+        `;
+    });
+}
+async function loadRegisteredCourses(semesterId){
 
     try{
 
@@ -22,9 +99,19 @@ async function loadRegisteredCourses(){
                 "access_token"
             );
 
+        // const response =
+        //     await fetch(
+        //         "http://localhost:8000/api/student/registered-courses",
+        //         {
+        //             headers:{
+        //                 Authorization:
+        //                     `Bearer ${token}`
+        //             }
+        //         }
+        //     );
         const response =
             await fetch(
-                "http://localhost:8000/api/student/registered-courses",
+                `http://localhost:8000/api/student/registered-courses-by-semester?semester_id=${semesterId}`,
                 {
                     headers:{
                         Authorization:
