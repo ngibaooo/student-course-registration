@@ -25,14 +25,6 @@ router = APIRouter(
     dependencies=[Depends(require_admin)]
 )
 
-
-@router.get("")
-def get_all_sections(
-    db: Session = Depends(get_db)
-):
-    return CourseSectionService.get_all(db)
-
-
 @router.get("/search")
 def search_section(
     keyword: str,
@@ -42,6 +34,12 @@ def search_section(
         db,
         keyword
     )
+
+@router.get("")
+def get_all_sections(
+    db: Session = Depends(get_db)
+):
+    return CourseSectionService.get_all(db)
 
 
 @router.get("/{section_id}")
