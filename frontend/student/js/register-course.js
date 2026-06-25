@@ -1,12 +1,20 @@
 let courses = [];
 let selectedCourses = [];
+let semesters = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
 
     await loadTopbar("Đăng ký học phần");
 
-    await loadCourses();
+    // await loadCourses();
+    await loadSemesters();
 
+    document
+        .getElementById("semesterSelect")
+        .addEventListener(
+            "change",
+            handleSemesterChange
+        );
     document
         .getElementById("registerBtn")
         .addEventListener(
@@ -15,34 +23,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 });
 
-// async function loadCourses() {
-
-//     const token =
-//         localStorage.getItem("access_token");
-
-//     const response = await fetch(
-//         "http://localhost:8000/api/student/open-courses",
-//         {
-//             headers:{
-//                 Authorization:`Bearer ${token}`
-//             }
-//         }
-//     );
-
-//     const result = await response.json();
-
-//     courses = result.data;
-
-//     renderCourses();
-// }
-async function loadCourses() {
+async function loadCourses(semesterId) {
 
     const token =
         localStorage.getItem("access_token");
 
     // Danh sách học phần mở
     const openCoursesResponse = await fetch(
-        "http://localhost:8000/api/student/open-courses",
+        // "http://localhost:8000/api/student/open-courses",
+        `http://localhost:8000/api/student/open-courses-by-semester?semester_id=${semesterId}`,
         {
             headers:{
                 Authorization:`Bearer ${token}`
@@ -132,6 +121,17 @@ function renderCourses() {
                         : "Đầy"
                 }
             </td>
+            <td>
+
+                <a
+                    href="course-detail.html?id=${course.id}"
+                    class="detail-btn"
+                >
+                    <i class="fa-regular fa-eye"></i>
+                    Xem chi tiết
+                </a>
+
+            </td>
 
         </tr>
         `;
@@ -183,12 +183,15 @@ function attachCheckboxEvents() {
     });
 }
 async function registerCourses() {
+    const errorBox =
+        document.getElementById(
+            "registerError"
+        );
 
+    errorBox.textContent = "";
     if(selectedCourses.length === 0){
 
-        alert(
-            "Vui lòng chọn học phần"
-        );
+        alert("Vui lòng chọn học phần");
 
         return;
     }
@@ -202,24 +205,37 @@ async function registerCourses() {
 
         for(const sectionId of selectedCourses){
 
-            await fetch(
-                "http://localhost:8000/registrations",
-                {
-                    method:"POST",
+            const response =
+                await fetch(
+                    "http://localhost:8000/registrations",
+                    {
+                        method:"POST",
 
-                    headers:{
-                        "Content-Type":
-                            "application/json",
+                        headers:{
+                            "Content-Type":
+                                "application/json",
 
-                        Authorization:
-                            `Bearer ${token}`
-                    },
+                            Authorization:
+                                `Bearer ${token}`
+                        },
 
-                    body: JSON.stringify({
-                        section_id: sectionId
-                    })
-                }
-            );
+                        body: JSON.stringify({
+                            section_id: sectionId
+                        })
+                    }
+                );
+
+            const result =
+                await response.json();
+
+            // Backend trả lỗi
+            if(!response.ok){
+
+                throw new Error(
+                    result.detail ||
+                    "Đăng ký thất bại"
+                );
+            }
         }
 
         alert(
@@ -233,8 +249,158 @@ async function registerCourses() {
 
         console.error(error);
 
-        alert(
-            "Đăng ký thất bại"
-        );
+        alert(error.message);
     }
+}
+// async function loadSemesters(){
+
+//     const token =
+//         localStorage.getItem("access_token");
+
+//     const response =
+//         await fetch(
+//             "http://localhost:8000/api/student/semesters",
+//             {
+//                 headers:{
+//                     Authorization:`Bearer ${token}`
+//                 }
+//             }
+//         );
+
+//     const result =
+//         await response.json();
+
+//     const select =
+//         document.getElementById(
+//             "semesterSelect"
+//         );
+
+//     result.data.forEach(item => {
+
+//         select.innerHTML += `
+//             <option value="${item.id}">
+//                 ${item.semester_name}
+//                 ${item.academic_year}
+//             </option>
+//         `;
+//     });
+// }
+async function loadSemesters(){
+
+    const token =
+        localStorage.getItem("access_token");
+
+    const response =
+        await fetch(
+            "http://localhost:8000/api/student/semesters",
+            {
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            }
+        );
+
+    const result =
+        await response.json();
+
+    semesters = result.data;
+
+    const select =
+        document.getElementById(
+            "semesterSelect"
+        );
+
+    result.data.forEach(item => {
+
+        select.innerHTML += `
+            <option value="${item.id}">
+                ${item.semester_name}
+                ${item.academic_year}
+            </option>
+        `;
+    });
+}
+// async function handleSemesterChange(){
+
+//     const semesterId =
+//         document.getElementById(
+//             "semesterSelect"
+//         ).value;
+
+//     if(!semesterId){
+
+//         document.getElementById(
+//             "courseSection"
+//         ).style.display = "none";
+
+//         return;
+//     }
+
+//     await loadCourses(semesterId);
+
+//     document.getElementById(
+//         "courseSection"
+//     ).style.display = "block";
+// }
+async function handleSemesterChange(){
+
+    const semesterId =
+        document.getElementById(
+            "semesterSelect"
+        ).value;
+
+    const warningBox =
+        document.getElementById(
+            "semesterWarning"
+        );
+
+    const registerBtn =
+        document.getElementById(
+            "registerBtn"
+        );
+
+    if(!semesterId){
+
+        document.getElementById(
+            "courseSection"
+        ).style.display = "none";
+
+        warningBox.style.display = "none";
+
+        return;
+    }
+
+    const semester =
+        semesters.find(
+            item =>
+                item.id == semesterId
+        );
+
+    if(
+        semester &&
+        semester.status === "CLOSED"
+    ){
+
+        warningBox.style.display =
+            "block";
+
+        warningBox.textContent =
+            "Sinh viên không được phép đăng ký học phần trong học kỳ này.";
+
+        registerBtn.disabled = true;
+
+    }
+    else{
+
+        warningBox.style.display =
+            "none";
+
+        registerBtn.disabled = false;
+    }
+
+    await loadCourses(semesterId);
+
+    document.getElementById(
+        "courseSection"
+    ).style.display = "block";
 }

@@ -45,7 +45,7 @@ async function loadTopbarUser() {
             .textContent = student.full_name;
 
         document.getElementById("topbarStudentId")
-            .textContent = `ID: ${student.id}`;
+            .textContent = `ID: ${student.user_id}`;
 
         document.getElementById("topbarAvatar")
             .textContent = getInitials(student.full_name);

@@ -1,11 +1,25 @@
+let searchTimeout = null;
+// document.addEventListener("DOMContentLoaded", async () => {
+
+//     await loadTopbar("Học phần mở");
+
+//     await loadCourses();
+
+// });
 document.addEventListener("DOMContentLoaded", async () => {
 
     await loadTopbar("Học phần mở");
 
     await loadCourses();
 
-});
+    document
+        .getElementById("searchInput")
+        .addEventListener(
+            "input",
+            handleSearch
+        );
 
+});
 async function loadCourses() {
 
     try {
@@ -33,6 +47,55 @@ async function loadCourses() {
 
     }
 
+}
+function handleSearch(event){
+
+    const keyword =
+        event.target.value.trim();
+
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+
+        searchCourses(keyword);
+
+    }, 500);
+
+}
+async function searchCourses(keyword){
+
+    try{
+
+        const token =
+            localStorage.getItem("access_token");
+
+        if(keyword === ""){
+
+            await loadCourses();
+
+            return;
+        }
+
+        const response = await fetch(
+            `http://127.0.0.1:8000/api/student/search-courses?keyword=${encodeURIComponent(keyword)}`,
+            {
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            }
+        );
+
+        const result =
+            await response.json();
+
+        renderCourses(result.data);
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
 }
 
 function renderCourses(courses){

@@ -88,6 +88,7 @@ def get_course_detail(section_id: int):
             c.credits,
             c.description,
             l.full_name AS lecturer_name,
+            sem.semester_name,
             sem.academic_year,
             sem.status AS semester_status
         FROM CourseSection cs
@@ -106,8 +107,6 @@ def get_course_detail(section_id: int):
 
     finally:
         db.close()
-
-
 def search_courses(keyword: str):
     db = SessionLocal()
 
@@ -169,6 +168,64 @@ def get_student_schedule(user_id: int):
             {
                 "user_id": user_id
             }
+        )
+
+        return rows_to_list(result.fetchall())
+
+    finally:
+        db.close()
+
+def get_semesters():
+    db = SessionLocal()
+
+    try:
+
+        query = text("""
+        SELECT
+            id,
+            semester_name,
+            academic_year,
+            status
+        FROM Semester
+        ORDER BY academic_year DESC, semester_name DESC
+        """)
+
+        result = db.execute(query)
+
+        return rows_to_list(result.fetchall())
+
+    finally:
+        db.close()
+
+def get_open_courses_by_semester(semester_id: int):
+    db = SessionLocal()
+
+    try:
+        query = text("""
+        SELECT
+            cs.id,
+            c.course_name,
+            c.credits,
+            l.full_name AS lecturer_name,
+            cs.classroom,
+            cs.schedule_day,
+            cs.start_period,
+            cs.end_period,
+            cs.maximum_students,
+            cs.registered_students,
+            (cs.maximum_students - cs.registered_students) AS available_slots
+        FROM CourseSection cs
+        JOIN Course c
+            ON cs.course_id = c.id
+        LEFT JOIN Lecturer l
+            ON cs.lecturer_id = l.id
+        WHERE cs.status = 'ACTIVE'
+          AND cs.semester_id = :semester_id
+        """)
+
+        result = db.execute(
+            query,
+            {"semester_id": semester_id}
         )
 
         return rows_to_list(result.fetchall())

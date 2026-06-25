@@ -47,13 +47,14 @@ async function loadCourseDetail() {
 
         document.getElementById("classroom").textContent =
             course.classroom;
-
+        document.getElementById("semester").textContent =
+            `${course.semester_name} (${course.academic_year})`;
         document.getElementById("credits").textContent =
             course.credits;
 
         document.getElementById("schedule").textContent =
             `Thứ ${course.schedule_day}
-             (${course.start_period}-${course.end_period})`;
+             (Tiết: ${course.start_period}-${course.end_period})`;
 
         const available =
             course.maximum_students -
@@ -66,14 +67,60 @@ async function loadCourseDetail() {
         document.getElementById("description").textContent =
             course.description;
 
-        if (available <= 0) {
+        // if (available <= 0) {
 
-            const btn =
-                document.getElementById("registerBtn");
+        //     const btn =
+        //         document.getElementById("registerBtn");
+
+        //     btn.disabled = true;
+        //     btn.textContent = "Lớp đã đầy";
+        // }
+        const btn =
+            document.getElementById(
+                "registerBtn"
+            );
+
+        if(
+            course.semester_status === "CLOSED"
+        ){
 
             btn.disabled = true;
-            btn.textContent = "Lớp đã đầy";
+
+            btn.textContent =
+                "Học kỳ đã đóng";
+
+             const warning =
+                document.getElementById(
+                    "semesterWarning"
+                );
+
+            warning.style.display =
+                "block";
+
+            warning.textContent =
+                "Sinh viên không được phép đăng ký học phần trong học kỳ này.";
         }
+        else if(available <= 0){
+
+            btn.disabled = true;
+
+            btn.textContent =
+                "Lớp đã đầy";
+        }
+        else{
+
+            btn.disabled = false;
+
+            btn.textContent =
+                "Đăng ký học phần";
+        }
+        const registerBtn =
+            document.getElementById("registerBtn");
+
+        registerBtn.addEventListener(
+            "click",
+            () => registerCourse(course.id)
+        );
 
     }
     catch(error){
@@ -82,5 +129,66 @@ async function loadCourseDetail() {
 
         alert("Không tải được chi tiết học phần");
 
+    }
+}
+async function registerCourse(sectionId) {
+
+    const confirmed = confirm(
+        "Bạn có chắc muốn đăng ký học phần này?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const token =
+            localStorage.getItem("access_token");
+
+        const response = await fetch(
+            "http://localhost:8000/registrations",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    section_id: sectionId
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.detail ||
+                result.message ||
+                "Đăng ký thất bại"
+            );
+        }
+
+        alert(
+            "Đăng ký học phần thành công"
+        );
+
+        window.location.href =
+            "open-courses.html";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Đăng ký học phần thất bại"
+        );
     }
 }

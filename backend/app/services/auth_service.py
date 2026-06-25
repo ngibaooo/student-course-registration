@@ -55,13 +55,13 @@ def login_service(request: LoginRequest):
     if account is None:
         raise HTTPException(
             status_code=401,
-            detail="Tài khoản không tồn tại"
+            detail="Sai thông tin đăng nhập hoặc tài khoản không tồn tại"
         )
 
     if str(account["status"]).upper() != "ACTIVE":
         raise HTTPException(
             status_code=403,
-            detail="Tài khoản đã bị khóa"
+            detail="Tài khoản hiện đang bị khóa! Hãy liên hệ với phòng công tác sinh viên"
         )
 
     if not verify_password(
@@ -70,7 +70,7 @@ def login_service(request: LoginRequest):
     ):
         raise HTTPException(
             status_code=401,
-            detail="Mật khẩu không chính xác"
+            detail="Sai thông tin đăng nhập hoặc tài khoản không tồn tại"
         )
 
     token_data = {
