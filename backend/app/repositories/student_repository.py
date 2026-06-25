@@ -232,3 +232,31 @@ def get_open_courses_by_semester(semester_id: int):
 
     finally:
         db.close()
+
+def get_registered_courses_by_semester(
+    user_id: int,
+    semester_id: int
+):
+    db = SessionLocal()
+
+    try:
+
+        query = text("""
+            SELECT *
+            FROM vw_registered_course_sections
+            WHERE user_id = :user_id
+              AND semester_id = :semester_id
+        """)
+
+        result = db.execute(
+            query,
+            {
+                "user_id": user_id,
+                "semester_id": semester_id
+            }
+        )
+
+        return rows_to_list(result.fetchall())
+
+    finally:
+        db.close()

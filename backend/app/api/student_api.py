@@ -9,7 +9,8 @@ from app.services.student_service import (
     get_registered_courses_service,
     get_student_schedule_service,
     get_semesters_service,
-    get_open_courses_by_semester_service
+    get_open_courses_by_semester_service,
+    get_registered_courses_by_semester_service
 )
 
 
@@ -99,4 +100,25 @@ def get_open_courses_by_semester_api(
         "data": get_open_courses_by_semester_service(
             semester_id
         )
+    }
+
+@router.get(
+    "/registered-courses-by-semester"
+)
+def get_registered_courses_by_semester_api(
+    semester_id: int,
+    current_user: dict = Depends(require_student)
+):
+
+    user_id = current_user.get("user_id")
+
+    return {
+        "message":
+            "Lấy danh sách học phần theo học kỳ thành công",
+
+        "data":
+            get_registered_courses_by_semester_service(
+                user_id,
+                semester_id
+            )
     }

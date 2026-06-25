@@ -8,7 +8,8 @@ from app.repositories.student_repository import (
     get_registered_courses,
     get_student_schedule,
     get_semesters,
-    get_open_courses_by_semester
+    get_open_courses_by_semester,
+    get_registered_courses_by_semester
 )
 
 
@@ -67,5 +68,14 @@ def get_open_courses_by_semester_service(
     semester_id: int
 ):
     return get_open_courses_by_semester(
+        semester_id
+    )
+
+def get_registered_courses_by_semester_service(
+    user_id: int,
+    semester_id: int
+):
+    return get_registered_courses_by_semester(
+        user_id,
         semester_id
     )
