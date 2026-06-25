@@ -119,3 +119,44 @@ body{
     text-align:center;
     color:#6b7280;
 }
+.semester-filter{
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.semester-filter select{
+    padding:10px 14px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+}
+.filter-card{
+
+    margin:30px 30px 0 30px;
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:20px 25px;
+
+    box-shadow:
+        0 1px 3px rgba(0,0,0,.05);
+}
+
+.semester-filter label{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    font-weight:600;
+    color:#374151;
+}
+
+.semester-filter label i{
+    color:#2563eb;
+}

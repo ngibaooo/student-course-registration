@@ -30,7 +30,7 @@ async function loadProfile() {
             student.full_name;
 
         document.getElementById("studentId").textContent =
-            `ID: ${student.id}`;
+            `ID: ${student.user_id}`;
 
         document.getElementById("departmentName").textContent =
             `Khoa: ${student.department_name}`;
@@ -51,7 +51,7 @@ async function loadProfile() {
             student.address;
 
         document.getElementById("studyStudentId").textContent =
-            student.id;
+            student.user_id;
 
         document.getElementById("studyDepartment").textContent =
             student.department_name;
