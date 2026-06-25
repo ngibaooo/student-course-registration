@@ -27,7 +27,8 @@ SELECT
     cr.registration_date,
 
     cr.status,
-
+    
+    sem.id AS semester_id,
     sem.semester_name,
     sem.academic_year
 
