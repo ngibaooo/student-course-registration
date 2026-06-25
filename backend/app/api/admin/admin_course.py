@@ -30,6 +30,16 @@ def search_course(
     keyword: str,
     db: Session = Depends(get_db)
 ):
+    
+    if keyword.isdigit():
+        try:
+            course = CourseService.get_by_id(db, int(keyword))
+            if course:
+                return [course]
+            return []
+        except Exception:
+            return []
+
     return CourseService.search(
         db,
         keyword

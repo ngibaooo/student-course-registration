@@ -31,6 +31,13 @@ def search_student(
     keyword: str,
     db: Session = Depends(get_db)
 ):
+    if keyword.isdigit():
+        student=StudentRepository.get_by_id(db,int(keyword))
+        if student:
+            return[student]
+        return []
+    
+    
     return StudentRepository.search_by_name(
         db,
         keyword

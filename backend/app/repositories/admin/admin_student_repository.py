@@ -16,9 +16,11 @@ class StudentRepository:
                 a.phone,
                 a.address,
                 a.enrollment_year,
-                a.department_id
+                a.department_id,
+                d.department_name
             from Student a
             join [user] b on a.user_id =b.id
+            join Department d on a.department_id=d.id
             where b.role='STUDENT'
         """)
         return db.execute(query).mappings().all()
@@ -35,9 +37,11 @@ class StudentRepository:
                 a.gender,
                 a.phone,
                 a.address,
-                a.department_id
+                a.department_id,
+                d.department_name   
             from Student a
             join [user] b on a.user_id =b.id
+            join Department d on a.department_id=d.id
             where a.id=:student_id
         """)
         return db.execute(
