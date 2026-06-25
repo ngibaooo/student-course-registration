@@ -15,6 +15,7 @@ class StudentRepository:
                 a.gender,
                 a.phone,
                 a.address,
+                a.enrollment_year,
                 a.department_id
             from Student a
             join [user] b on a.user_id =b.id
@@ -67,54 +68,33 @@ class StudentRepository:
         ).mappings().all()
         
     @staticmethod
-    def create_user(db,data):
-        query=text("""
-            insert into [User]
-            (
-                full_name,
-                email,
-                password,
-                role,
-                status
-            )
-            output inserted.id
-            values
-            (
-                :full_name,
-                :email,
-                :password,
-                'STUDENT',
-                'ACTIVE'
-            )
+    def create_student(db, data, hashed_password):
+        query = text("""
+            EXEC sp_CreateStudent 
+                @full_name = :full_name, 
+                @email = :email, 
+                @password = :password,
+                @date_of_birth = :date_of_birth, 
+                @gender = :gender, 
+                @phone = :phone, 
+                @address = :address, 
+                @enrollment_year = :enrollment_year,
+                @department_id = :department_id
         """)
         return db.execute(
             query,
-            data
+            {
+                "full_name": data.full_name,
+                "email": data.email,
+                "password": hashed_password,
+                "date_of_birth": data.date_of_birth,
+                "gender": data.gender,
+                "phone": data.phone,
+                "address": data.address,
+                "enrollment_year": data.enrollment_year,
+                "department_id": data.department_id
+            }
         ).scalar()
-    
-    @staticmethod
-    def create_student(db, data):
-        query = text("""
-            INSERT INTO Student
-            (
-                date_of_birth,
-                gender,
-                phone,
-                address,
-                department_id,
-                user_id
-            )
-            VALUES
-            (
-                :date_of_birth,
-                :gender,
-                :phone,
-                :address,
-                :department_id,
-                :user_id
-            )
-        """)
-        db.execute(query, data)
     
     @staticmethod
     def update_user(db, student_id, data):

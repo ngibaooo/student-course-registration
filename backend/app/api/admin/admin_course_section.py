@@ -17,10 +17,12 @@ from app.schemas.admin.admin_course_section_schemas import (
     CourseSectionCreate,
     CourseSectionUpdate
 )
+from app.services.auth_service import require_admin
 
 router = APIRouter(
     prefix="/admin/course-sections",
-    tags=["Admin Course Sections"]
+    tags=["Admin Course Sections"],
+    dependencies=[Depends(require_admin)]
 )
 
 
@@ -42,7 +44,7 @@ def search_section(
     )
 
 
-@router.get("/{id}")
+@router.get("/{section_id}")
 def get_section_by_id(
     section_id: int,
     db: Session = Depends(get_db)
@@ -64,7 +66,7 @@ def create_section(
     )
 
 
-@router.put("/{id}")
+@router.put("/{section_id}")
 def update_section(
     section_id: int,
     section: CourseSectionUpdate,
@@ -77,7 +79,7 @@ def update_section(
     )
 
 
-@router.patch("/{id}/disable")
+@router.patch("/{section_id}/disable")
 def disable_section(
     section_id: int,
     db: Session = Depends(get_db)

@@ -1,0 +1,241 @@
+let currentEditId = null;
+let currentDeleteId = null;
+let allClasses = [];
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    fetchClasses();
+    const searchInput = document.getElementById("searchClassInput");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => fetchClasses(e.target.value.trim()));
+    }
+});
+
+
+async function fetchClasses(keyword = "") {
+    const tableBody = document.getElementById("classTableBody");
+    if (!tableBody) return;
+
+
+    try {
+        const token = localStorage.getItem("access_token");
+        let url = `${API_URL}/course-sections`;
+        if (keyword) url = `${API_URL}/course-sections/search?keyword=${encodeURIComponent(keyword)}`;
+
+
+        const response = await fetch(url, {
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
+        });
+
+
+        if (!response.ok) throw new Error("Không thể tải danh sách lớp học phần");
+
+
+        const result = await response.json();
+       
+        let classes = [];
+        if (Array.isArray(result)) {
+            classes = result;
+        } else if (result && Array.isArray(result.data)) {
+            classes = result.data;
+        }
+
+
+        allClasses = classes;
+        tableBody.innerHTML = "";
+
+
+        if (!Array.isArray(classes) || classes.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#6b7280; padding:40px;">Không tìm thấy lớp học phần nào</td></tr>`;
+            return;
+        }
+
+
+        classes.forEach(c => {
+            const tr = document.createElement("tr");
+
+
+            let statusBadge = `<span class="badge success">Đang mở</span>`;
+            if (c.status && c.status !== 'ACTIVE') {
+                statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
+            }
+
+
+            tr.innerHTML = `
+                <td><strong>${c.id}</strong></td>
+                <td>HP${c.course_id}</td>
+                <td>GV${c.lecturer_id}</td>
+                <td>HK${c.semester_id}</td>
+                <td>Thứ ${c.schedule_day} (${c.start_period}-${c.end_period})</td>
+                <td>${c.classroom}</td>
+                <td>${c.registered_students || 0}/${c.maximum_students}</td>
+                <td>${statusBadge}</td>
+                <td>
+                    <div class="action-icons">
+                        <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
+                        <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+    } catch (e) {
+        console.error(e);
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${e.message}</td></tr>`;
+    }
+}
+
+
+function openAddModal() {
+    currentEditId = null;
+    document.getElementById("modal_class_course").value = "";
+    document.getElementById("modal_class_teacher").value = "";
+    document.getElementById("modal_class_semester").value = "";
+    document.getElementById("modal_class_room").value = "";
+    document.getElementById("modal_class_day").value = "2";
+    document.getElementById("modal_class_max").value = "";
+    document.getElementById("modal_class_start").value = "";
+    document.getElementById("modal_class_end").value = "";
+    openModal('class-modal');
+}
+
+
+function openEditModal(id) {
+    const cls = allClasses.find(c => c.id === id);
+    if (!cls) return;
+
+
+    currentEditId = id;
+    document.getElementById("modal_class_course").value = cls.course_id;
+    document.getElementById("modal_class_teacher").value = cls.lecturer_id;
+    document.getElementById("modal_class_semester").value = cls.semester_id;
+    document.getElementById("modal_class_room").value = cls.classroom;
+    document.getElementById("modal_class_day").value = cls.schedule_day;
+    document.getElementById("modal_class_max").value = cls.maximum_students;
+    document.getElementById("modal_class_start").value = cls.start_period;
+    document.getElementById("modal_class_end").value = cls.end_period;
+   
+    openModal('class-modal');
+}
+
+
+async function saveClass() {
+    const courseId = document.getElementById("modal_class_course").value;
+    const lecturerId = document.getElementById("modal_class_teacher").value;
+    const semesterId = document.getElementById("modal_class_semester").value;
+    const classroom = document.getElementById("modal_class_room").value.trim();
+    const scheduleDay = document.getElementById("modal_class_day").value;
+    const maxStudents = document.getElementById("modal_class_max").value;
+    const startPeriod = document.getElementById("modal_class_start").value;
+    const endPeriod = document.getElementById("modal_class_end").value;
+
+
+    if (!courseId || !lecturerId || !semesterId || !classroom || !scheduleDay || !maxStudents || !startPeriod || !endPeriod) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return;
+    }
+
+
+    const payload = {
+        classroom: classroom,
+        schedule_day: parseInt(scheduleDay),
+        start_period: parseInt(startPeriod),
+        end_period: parseInt(endPeriod),
+        maximum_students: parseInt(maxStudents),
+        semester_id: parseInt(semesterId),
+        course_id: parseInt(courseId),
+        lecturer_id: parseInt(lecturerId)
+    };
+
+
+    try {
+        const token = localStorage.getItem("access_token");
+       
+        let url = `${API_URL}/course-sections`;
+        let method = "POST";
+       
+        if (currentEditId) {
+            url = `${API_URL}/course-sections/${currentEditId}`;
+            method = "PUT";
+        }
+
+
+        const response = await fetch(url, {
+            method: method,
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.detail ? JSON.stringify(result.detail) : "Lỗi lưu lớp học phần");
+        }
+
+
+        alert("Lưu lớp học phần thành công!");
+        closeModal('class-modal');
+        fetchClasses();
+    } catch (e) {
+        alert(e.message);
+    }
+}
+
+
+function confirmDelete(id) {
+    currentDeleteId = id;
+    openModal('delete-modal');
+}
+
+
+async function executeDelete() {
+    if (!currentDeleteId) return;
+
+
+    try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/course-sections/${currentDeleteId}/disable`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.detail || "Yêu cầu khóa bị từ chối từ Server");
+        }
+
+
+        alert("Đã khóa lớp học phần thành công!");
+        closeModal('delete-modal');
+        currentDeleteId = null;
+        fetchClasses();
+
+
+    } catch (error) {
+        alert("Lỗi thực hiện khóa: " + error.message);
+    }
+}
+
+
+// Modal Toggle Functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add('show');
+}
+
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('show');
+}
+
+
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('show');
+    }
+}

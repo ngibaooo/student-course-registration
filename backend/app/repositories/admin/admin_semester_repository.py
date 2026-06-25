@@ -78,7 +78,7 @@ class SemesterRepository:
                 :registration_open_date,
                 :registration_close_date,
                 :cancel_deadline,
-                'CLOSED'
+                'OPEN'
             )
         """)
 

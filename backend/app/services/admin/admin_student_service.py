@@ -3,6 +3,7 @@ from passlib.context import CryptContext
 from app.repositories.admin.admin_student_repository import (
     StudentRepository
 )
+from app.services.auth_service import hash_password
 
 pwd_context = CryptContext(
     schemes=["bcrypt"],
@@ -16,35 +17,19 @@ class StudentService:
     def create_student(db, student):
         try:
             
-            hashed_password = pwd_context.hash(
-                student.password
-            )
+            hashed_pwd = hash_password(student.password)
 
-            user_id = StudentRepository.create_user(
-                db,
-                {
-                    "full_name": student.full_name,
-                    "email": student.email,
-                    "password": hashed_password
-                }
-            )
-
-            StudentRepository.create_student(
-                db,
-                {
-                    "date_of_birth": student.date_of_birth,
-                    "gender": student.gender,
-                    "phone": student.phone,
-                    "address": student.address,
-                    "department_id": student.department_id,
-                    "user_id": user_id
-                }
+            new_student_id = StudentRepository.create_student(
+                db=db, 
+                data=student, 
+                hashed_password=hashed_pwd
             )
 
             db.commit()
 
             return {
-                "message": "Student created successfully"
+                "message": "Student created successfully",
+                "student_id": new_student_id
             }
         except Exception as e:
             db.rollback()

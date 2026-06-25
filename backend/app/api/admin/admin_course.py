@@ -17,11 +17,23 @@ from app.schemas.admin.admin_course_schemas import (
     CourseUpdate
 )
 
+from app.services.auth_service import require_admin
+
 router = APIRouter(
     prefix="/admin/courses",
-    tags=["Admin Course"]
+    tags=["Admin Course"],
+    dependencies=[Depends(require_admin)]
 )
 
+@router.get("/search")
+def search_course(
+    keyword: str,
+    db: Session = Depends(get_db)
+):
+    return CourseService.search(
+        db,
+        keyword
+    )
 
 @router.get("")
 def get_all_courses(
@@ -30,7 +42,7 @@ def get_all_courses(
     return CourseService.get_all(db)
 
 
-@router.get("/{id}")
+@router.get("/{course_id}")
 def get_course_by_id(
     course_id: int,
     db: Session = Depends(get_db)
@@ -64,7 +76,7 @@ def create_course(
         )
 
 
-@router.put("/{id}")
+@router.put("/{course_id}")
 def update_course(
     course_id: int,
     course: CourseUpdate,
@@ -83,7 +95,7 @@ def update_course(
         )
 
 
-@router.patch("/{id}/disable")
+@router.patch("/{course_id}/disable")
 def disable_course(
     course_id: int,
     db: Session = Depends(get_db)
@@ -98,14 +110,3 @@ def disable_course(
             status_code=400,
             detail=str(e)
         )
-
-
-@router.get("/search/")
-def search_course(
-    keyword: str,
-    db: Session = Depends(get_db)
-):
-    return CourseService.search(
-        db,
-        keyword
-    )

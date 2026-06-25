@@ -70,62 +70,18 @@ class RegistrationRepository:
     
     @staticmethod
     def statistics_course_sections(db):
-
+        # Gọi thẳng View đã tạo trong DB
         query = text("""
-            SELECT
-                cs.id,
-                c.course_name,
-                cs.classroom,
-                cs.maximum_students,
-                cs.registered_students,
-
-                CAST(
-                    cs.registered_students * 100.0
-                    / cs.maximum_students
-                    AS DECIMAL(5,2)
-                ) AS occupancy_rate
-
-            FROM CourseSection cs
-
-            JOIN Course c
-                ON cs.course_id = c.id
-
-            ORDER BY c.course_name
+            SELECT * FROM vw_CourseSectionStatistics 
+            ORDER BY course_name
         """)
-
-        return db.execute(
-            query
-        ).mappings().all()
-    
+        return db.execute(query).mappings().all()
+        
     @staticmethod
     def statistics_semesters(db):
-
+        # Gọi thẳng View đã tạo trong DB
         query = text("""
-            SELECT
-                sem.id,
-                sem.semester_name,
-
-                COUNT(DISTINCT cs.id)
-                    AS total_sections,
-
-                COUNT(cr.student_id)
-                    AS total_registrations
-
-            FROM Semester sem
-
-            LEFT JOIN CourseSection cs
-                ON sem.id = cs.semester_id
-
-            LEFT JOIN CourseRegistration cr
-                ON cs.id = cr.section_id
-
-            GROUP BY
-                sem.id,
-                sem.semester_name
-
-            ORDER BY sem.id
+            SELECT * FROM vw_SemesterStatistics 
+            ORDER BY id
         """)
-
-        return db.execute(
-            query
-        ).mappings().all()
+        return db.execute(query).mappings().all()

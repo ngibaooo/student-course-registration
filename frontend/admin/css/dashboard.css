@@ -1,0 +1,66 @@
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.card {
+    background-color: var(--white);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: none; /* Bỏ viền thô */
+}
+
+.card-icon {
+    width: 56px;
+    height: 56px;
+    background-color: #eff6ff;
+    color: var(--primary-color);
+    border-radius: 50%; /* Icon hình tròn giống avatar bên Student */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.card-info h3 {
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.card-info .count {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-top: 4px;
+}
+
+.dashboard-data {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+.data-table-container, .data-chart-container {
+    background: var(--white);
+    padding: 24px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.mock-chart {
+    height: 240px;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: var(--radius-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý lớp học phần</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar container -->
+        <div id="sidebar-container">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo"><i class="fa-solid fa-user-shield"></i></div>
+                    <div><h2>Admin</h2><span>Cổng quản trị</span></div>
+                </div>
+                <div class="menu">
+                    <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+                    <a href="student-manage.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i><span>Quản lý sinh viên</span></a>
+                    <a href="course-manage.html" class="menu-item"><i class="fa-solid fa-book"></i><span>Quản lý môn học</span></a>
+                    <a href="semester-manage.html" class="menu-item"><i class="fa-solid fa-calendar-days"></i><span>Quản lý học kỳ</span></a>
+                    <a href="class-manage.html" class="menu-item active"><i class="fa-solid fa-rectangle-list"></i><span>Quản lý lớp HP</span></a>
+                </div>
+                <div class="logout"><a href="#" class="menu-item" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Đăng xuất</span></a></div>
+            </div>
+        </div>
+
+
+        <div class="main">
+            <!-- Topbar container -->
+            <div id="topbar-container">
+                <div class="topbar">
+                    <h1>Quản lý lớp học phần</h1>
+                    <div class="user-box">
+                        <div><div class="user-name">Quản trị viên</div><div class="user-id">Admin Portal</div></div>
+                        <div class="avatar-small">A</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="course-container">
+                <div class="filter-bar">
+                    <div class="filter-left">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchClassInput" placeholder="Tìm kiếm lớp học phần...">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="openAddModal()">
+                        <i class="fa-solid fa-plus"></i> Tạo lớp học phần
+                    </button>
+                </div>
+
+
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>ID Lớp</th>
+                            <th>Môn học (ID)</th>
+                            <th>Giảng viên (ID)</th>
+                            <th>Học kỳ (ID)</th>
+                            <th>Lịch học</th>
+                            <th>Phòng</th>
+                            <th>Sĩ số</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classTableBody">
+                        <!-- Rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Class Modal -->
+    <div class="modal" id="class-modal">
+        <div class="modal-content" style="width: 700px;">
+            <div class="modal-header">
+                <h2>Thông tin lớp học phần</h2>
+                <div class="close-btn" onclick="closeModal('class-modal')"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>ID Môn học</label>
+                        <input type="number" id="modal_class_course" placeholder="Nhập ID Môn học (VD: 1)">
+                    </div>
+                    <div class="form-group">
+                        <label>ID Giảng viên</label>
+                        <input type="number" id="modal_class_teacher" placeholder="Nhập ID Giảng viên (VD: 1)">
+                    </div>
+                    <div class="form-group">
+                        <label>ID Học kỳ</label>
+                        <input type="number" id="modal_class_semester" placeholder="Nhập ID Học kỳ (VD: 1)">
+                    </div>
+                    <div class="form-group">
+                        <label>Phòng học</label>
+                        <input type="text" id="modal_class_room" placeholder="Ví dụ: A.202">
+                    </div>
+                    <div class="form-group">
+                        <label>Thứ học (2-8)</label>
+                        <select id="modal_class_day">
+                            <option value="2">Thứ 2</option>
+                            <option value="3">Thứ 3</option>
+                            <option value="4">Thứ 4</option>
+                            <option value="5">Thứ 5</option>
+                            <option value="6">Thứ 6</option>
+                            <option value="7">Thứ 7</option>
+                            <option value="8">Chủ nhật</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sĩ số tối đa</label>
+                        <input type="number" id="modal_class_max" placeholder="Ví dụ: 50">
+                    </div>
+                    <div class="form-group">
+                        <label>Tiết bắt đầu</label>
+                        <input type="number" id="modal_class_start" placeholder="Ví dụ: 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Tiết kết thúc</label>
+                        <input type="number" id="modal_class_end" placeholder="Ví dụ: 3">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeModal('class-modal')">Hủy</button>
+                <button class="btn-modal btn-save" onclick="saveClass()">Lưu lớp</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content" style="width: 400px; text-align: center;">
+            <div style="color: #F59E0B; font-size: 50px; margin-bottom: 20px;">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 style="font-size: 20px; color: #111827; margin-bottom: 10px;">Khóa lớp học phần?</h3>
+            <p style="color: #6B7280; font-size: 14px; margin-bottom: 24px;">Hành động này sẽ vô hiệu hóa lớp học phần. Bạn có chắc chắn không?</p>
+            <div style="display: flex; justify-content: center; gap: 12px;">
+                <button class="btn-modal btn-cancel" onclick="closeModal('delete-modal')">Hủy</button>
+                <button class="btn-modal btn-save" style="background:#F59E0B; box-shadow:none;" onclick="executeDelete()">Khóa lớp</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/main.js" data-page="class"></script>
+    <script src="../js/class-manage.js"></script>
+</body>
+</html>
+

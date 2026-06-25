@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý học kỳ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar container -->
+        <div id="sidebar-container">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo"><i class="fa-solid fa-user-shield"></i></div>
+                    <div><h2>Admin</h2><span>Cổng quản trị</span></div>
+                </div>
+                <div class="menu">
+                    <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+                    <a href="student-manage.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i><span>Quản lý sinh viên</span></a>
+                    <a href="course-manage.html" class="menu-item"><i class="fa-solid fa-book"></i><span>Quản lý môn học</span></a>
+                    <a href="semester-manage.html" class="menu-item active"><i class="fa-solid fa-calendar-days"></i><span>Quản lý học kỳ</span></a>
+                    <a href="class-manage.html" class="menu-item"><i class="fa-solid fa-rectangle-list"></i><span>Quản lý lớp HP</span></a>
+                </div>
+                <div class="logout"><a href="#" class="menu-item" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Đăng xuất</span></a></div>
+            </div>
+        </div>
+
+
+        <div class="main">
+            <!-- Topbar container -->
+            <div id="topbar-container">
+                <div class="topbar">
+                    <h1>Quản lý học kỳ</h1>
+                    <div class="user-box">
+                        <div><div class="user-name">Quản trị viên</div><div class="user-id">Admin Portal</div></div>
+                        <div class="avatar-small">A</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="course-container">
+                <div class="filter-bar">
+                    <div class="filter-left">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchSemesterInput" placeholder="Tìm kiếm tên học kỳ...">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="openAddModal()">
+                        <i class="fa-solid fa-plus"></i> Thêm học kỳ
+                    </button>
+                </div>
+
+
+                <table class="course-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên học kỳ</th>
+                            <th>Năm học</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Đăng ký (Mở - Đóng)</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="semesterTableBody">
+                        <!-- Rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Semester Modal -->
+    <div class="modal" id="semester-modal">
+        <div class="modal-content" style="width: 700px;">
+            <div class="modal-header">
+                <h2>Thông tin học kỳ</h2>
+                <div class="close-btn" onclick="closeModal('semester-modal')"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tên học kỳ</label>
+                        <input type="text" id="modal_sem_name" placeholder="Ví dụ: Học kỳ 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Năm học</label>
+                        <input type="text" id="modal_sem_year" placeholder="Ví dụ: 2025 - 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày bắt đầu học kỳ</label>
+                        <input type="date" id="modal_sem_start">
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày kết thúc học kỳ</label>
+                        <input type="date" id="modal_sem_end">
+                    </div>
+                   
+                    <div class="form-group full" style="margin-top: 15px; border-top: 1px solid #E5E7EB; padding-top: 15px;">
+                        <strong style="color: #4F46E5;">Thời gian đăng ký môn học</strong>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label>Mở cổng đăng ký</label>
+                        <input type="datetime-local" id="modal_reg_open">
+                    </div>
+                    <div class="form-group">
+                        <label>Đóng cổng đăng ký</label>
+                        <input type="datetime-local" id="modal_reg_close">
+                    </div>
+                    <div class="form-group">
+                        <label>Hạn chót hủy môn</label>
+                        <input type="datetime-local" id="modal_reg_cancel">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeModal('semester-modal')">Hủy</button>
+                <button class="btn-modal btn-save" onclick="saveSemester()">Lưu học kỳ</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Status Modal -->
+    <div class="modal" id="status-modal">
+        <div class="modal-content" style="width: 400px; text-align: center;">
+            <div style="color: #3B82F6; font-size: 50px; margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <h3 style="font-size: 20px; color: #111827; margin-bottom: 10px;" id="statusModalTitle">Thay đổi trạng thái?</h3>
+            <p style="color: #6B7280; font-size: 14px; margin-bottom: 24px;" id="statusModalText">Bạn có chắc chắn muốn thay đổi trạng thái học kỳ này?</p>
+            <div style="display: flex; justify-content: center; gap: 12px;">
+                <button class="btn-modal btn-cancel" onclick="closeModal('status-modal')">Hủy</button>
+                <button class="btn-modal btn-save" style="background:#3B82F6; box-shadow:none;" onclick="executeToggleStatus()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/main.js" data-page="semester"></script>
+    <script src="../js/semester-manage.js"></script>
+</body>
+</html>
+

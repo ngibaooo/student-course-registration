@@ -18,9 +18,12 @@ from app.schemas.admin.admin_student_schemas import (
     StudentUpdate
 )
 
+from app.services.auth_service import require_admin
+
 router = APIRouter(
     prefix="/admin/students",
-    tags=["Admin Students"]
+    tags=["Admin Students"],
+    dependencies=[Depends(require_admin)]
 )
 
 @router.get("/search")
@@ -72,8 +75,8 @@ def create_student(
     except Exception as e:
 
         raise HTTPException(
-            status_code=500,
-            detail=str(e)
+            status_code=400,
+            detail="Email đã tồn tại"
         )
 
 @router.put("/{id}")

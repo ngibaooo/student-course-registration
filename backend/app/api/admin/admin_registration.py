@@ -10,8 +10,11 @@ from app.services.admin.admin_registration_service import (
     RegistrationService
 )
 
+from app.services.auth_service import require_admin
+
 router = APIRouter(
-    tags=["Admin Registration"]
+    tags=["Admin Registration"],
+    dependencies=[Depends(require_admin)]
 )
 
 @router.get("/admin/course-sections/{id}/registrations")

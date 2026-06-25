@@ -14,11 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const token =
         localStorage.getItem("access_token");
-
+    const role = 
+        localStorage.getItem("user_role");
     if(token){
-
-        window.location.href =
-            "profile.html";
+        if (role === "STUDENT") {
+            window.location.href =
+                "profile.html";
+        }else{
+            window.location.href =
+                "../../admin/pages/dashboard.html";
+        }
 
         return;
     }
@@ -117,7 +122,7 @@ async function login(event){
         else{
 
             window.location.href =
-                "../admin/dashboard.html";
+                "../../admin/pages/dashboard.html";
         }
 
     }

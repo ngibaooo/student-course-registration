@@ -18,9 +18,12 @@ from app.schemas.admin.admin_semester_schemas import (
     SemesterUpdate
 )
 
+from app.services.auth_service import require_admin
+
 router = APIRouter(
     prefix="/admin/semesters",
-    tags=["Admin Semester"]
+    tags=["Admin Semester"],
+    dependencies=[Depends(require_admin)]
 )
 
 
@@ -31,7 +34,7 @@ def get_all_semesters(
     return SemesterService.get_all(db)
 
 
-@router.get("/{id}")
+@router.get("/{semester_id}")
 def get_semester_by_id(
     semester_id: int,
     db: Session = Depends(get_db)
@@ -70,7 +73,7 @@ def create_semester(
         )
 
 
-@router.put("/{id}")
+@router.put("/{semester_id}")
 def update_semester(
     semester_id: int,
     semester: SemesterUpdate,
@@ -92,7 +95,7 @@ def update_semester(
         )
 
 
-@router.patch("/{id}/open")
+@router.patch("/{semester_id}/open")
 def open_semester(
     semester_id: int,
     db: Session = Depends(get_db)
@@ -112,7 +115,7 @@ def open_semester(
         )
 
 
-@router.patch("/{id}/close")
+@router.patch("/{semester_id}/close")
 def close_semester(
     semester_id: int,
     db: Session = Depends(get_db)
