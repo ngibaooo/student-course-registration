@@ -34,6 +34,15 @@ def search_section(
     keyword: str,
     db: Session = Depends(get_db)
 ):
+    if keyword.isdigit():
+        try:
+            courseSection=CourseSectionService.get_by_id(db,int(keyword))
+            if courseSection:
+                return [courseSection]
+            return []
+        except Exception:
+            return []
+    
     return CourseSectionService.search(
         db,
         keyword

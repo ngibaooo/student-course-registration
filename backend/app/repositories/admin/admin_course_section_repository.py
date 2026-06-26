@@ -18,7 +18,8 @@ class CourseSectionRepository:
                 cs.status,
 
                 cs.semester_id,
-
+                s.semester_name,
+                     
                 cs.course_id,
                 c.course_name,
 
@@ -32,7 +33,9 @@ class CourseSectionRepository:
 
             JOIN Lecturer l
                 ON cs.lecturer_id = l.id
-
+            JOIN Semester s
+                ON cs.semester_id = s.id
+                     
             ORDER BY cs.id
         """)
        
@@ -59,7 +62,8 @@ class CourseSectionRepository:
                 cs.status,
 
                 cs.semester_id,
-
+                s.semester_name,
+                     
                 cs.course_id,
                 c.course_name,
 
@@ -75,6 +79,9 @@ class CourseSectionRepository:
             JOIN Lecturer l
                 ON cs.lecturer_id = l.id
 
+            JOIN Semester s
+                ON cs.semester_id = s.id
+                     
             WHERE cs.id=:id
         """)
 
