@@ -1,6 +1,7 @@
 from app.repositories.admin.admin_registration_repository import (
     RegistrationRepository
 )
+from fastapi import HTTPException, status
 
 
 class RegistrationService:
@@ -108,3 +109,36 @@ class RegistrationService:
 
             db.rollback()
             raise
+
+# Chuyển LHP cho svien
+    @staticmethod
+    def transfer_course_section(
+        db,
+        student_id,
+        from_section_id,
+        to_section_id
+    ):
+        try:
+
+            RegistrationRepository.transfer_course_section(
+                db,
+                student_id,
+                from_section_id,
+                to_section_id
+            )
+
+            db.commit()
+
+            return {
+                "message": "Transfer course section successfully"
+            }
+
+        except Exception as e:
+
+            db.rollback()
+            message = str(e.orig) if hasattr(e, "orig") else str(e)
+
+            raise HTTPException(
+                status_code=400,
+                detail=message
+            )
