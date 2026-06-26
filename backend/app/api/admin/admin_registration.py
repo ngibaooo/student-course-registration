@@ -9,6 +9,9 @@ from app.database.connection import get_db
 from app.services.admin.admin_registration_service import (
     RegistrationService
 )
+from app.schemas.admin.admin_registration_schemas import (
+    TransferCourseSectionRequest
+)
 
 from app.services.auth_service import require_admin
 
@@ -76,3 +79,17 @@ def statistics_semesters(
             status_code=400,
             detail=str(e)
         )
+
+@router.put("/admin/registrations/transfer")
+def transfer_course_section(
+    request: TransferCourseSectionRequest,
+    current_user: dict = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+
+    return RegistrationService.transfer_course_section(
+        db=db,
+        student_id=request.student_id,
+        from_section_id=request.from_section_id,
+        to_section_id=request.to_section_id
+    )
