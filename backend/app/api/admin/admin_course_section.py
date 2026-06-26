@@ -45,6 +45,27 @@ def get_all_sections(
 ):
     return CourseSectionService.get_all(db)
 
+@router.get("/dropdown/course")
+def get_course_dropdown(
+    db: Session = Depends(get_db)
+):
+    return CourseSectionService.get_course_dropdown(db)
+
+
+
+@router.get("/dropdown/lecturer")
+def get_lecturer_dropdown(
+    db: Session = Depends(get_db)
+):
+    return CourseSectionService.get_lecturer_dropdown(db)
+
+
+
+@router.get("/dropdown/semester")
+def get_semester_dropdown(
+    db: Session = Depends(get_db)
+):
+    return CourseSectionService.get_semester_dropdown(db)
 
 @router.get("/{section_id}")
 def get_section_by_id(
@@ -100,7 +121,7 @@ def enable_section(
         db,
         section_id
     )
-
+#DEMO LOI
 @demo_router.get("/demo/non-repeatable-read/admin/{section_id}")
 def demo_admin_read(
     section_id: int,

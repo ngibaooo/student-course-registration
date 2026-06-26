@@ -168,7 +168,28 @@ class CourseSectionService:
             db,
             keyword
         )
-    
+
+    @staticmethod
+    def get_course_dropdown(db):
+
+        return CourseSectionRepository.get_course_dropdown(db)
+
+
+
+    @staticmethod
+    def get_lecturer_dropdown(db):
+
+        return CourseSectionRepository.get_lecturer_dropdown(db)
+
+
+
+    @staticmethod
+    def get_semester_dropdown(db):
+
+        return CourseSectionRepository.get_semester_dropdown(db)
+
+
+
 #DEMO LOI
     @staticmethod
     def demo_admin_read(db, section_id: int):

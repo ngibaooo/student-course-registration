@@ -14,6 +14,7 @@ INSERT INTO [User]
 (full_name, email, [password], role, status)
 VALUES
 ('Admin System', 'admin@ut.edu.vn', 'admin123', 'ADMIN', 'ACTIVE'),
+('Admin System2', 'admin2@ut.edu.vn', 'admin1235', 'ADMIN', 'ACTIVE'),
 ('Nguyen Van A', 'sv001@ut.edu.vn', '123456', 'STUDENT', 'ACTIVE'),
 ('Tran Thi B', 'sv002@ut.edu.vn', '123456', 'STUDENT', 'ACTIVE'),
 ('Le Van C', 'sv003@ut.edu.vn', '123456', 'STUDENT', 'ACTIVE'),
@@ -132,4 +133,9 @@ VALUES
 (2, 1, GETDATE(), 'REGISTERED'),
 (3, 2, GETDATE(), 'REGISTERED'),
 (4, 3, GETDATE(), 'REGISTERED');
+GO
+INSERT INTO [User]
+(full_name, email, [password], role, status)
+VALUES
+('Admin System2', 'admin2@ut.edu.vn', 'admin1235', 'ADMIN', 'ACTIVE')
 GO

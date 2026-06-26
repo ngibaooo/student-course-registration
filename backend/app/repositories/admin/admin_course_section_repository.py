@@ -230,7 +230,62 @@ class CourseSectionRepository:
             query,
             {"keyword": f"%{keyword}%"}
         ).mappings().all()
-    
+
+#Thêm dropdow theo yêu cầu
+    @staticmethod
+    def get_course_dropdown(db):
+
+        query = text("""
+            SELECT
+                id,
+                course_name
+            FROM Course
+            WHERE status='ACTIVE'
+            ORDER BY course_name
+        """)
+
+        return db.execute(
+            query
+        ).mappings().all()
+
+
+
+    @staticmethod
+    def get_lecturer_dropdown(db):
+
+        query = text("""
+            SELECT
+                id,
+                full_name
+            FROM Lecturer
+            ORDER BY full_name
+        """)
+
+        return db.execute(
+            query
+        ).mappings().all()
+
+
+
+    @staticmethod
+    def get_semester_dropdown(db):
+
+        query = text("""
+            SELECT
+                id,
+                semester_name,
+                academic_year
+            FROM Semester
+            WHERE status='OPEN'
+            ORDER BY id DESC
+        """)
+
+        return db.execute(
+            query
+        ).mappings().all()
+
+
+
     # DEMO Loi Non-repeatable Read
     @staticmethod
     def demo_admin_read(db, section_id: int):
