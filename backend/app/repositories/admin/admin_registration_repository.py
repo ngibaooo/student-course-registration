@@ -85,3 +85,29 @@ class RegistrationRepository:
             ORDER BY id
         """)
         return db.execute(query).mappings().all()
+
+    from sqlalchemy import text
+
+# Chuyển lớp học phần cho svien
+    @staticmethod
+    def transfer_course_section(
+        db,
+        student_id: int,
+        from_section_id: int,
+        to_section_id: int
+    ):
+        query = text("""
+            EXEC sp_transfer_course_section
+                @StudentId = :student_id,
+                @FromSectionId = :from_section_id,
+                @ToSectionId = :to_section_id
+        """)
+
+        db.execute(
+            query,
+            {
+                "student_id": student_id,
+                "from_section_id": from_section_id,
+                "to_section_id": to_section_id
+            }
+        )

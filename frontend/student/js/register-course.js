@@ -207,7 +207,8 @@ async function registerCourses() {
 
             const response =
                 await fetch(
-                    "http://localhost:8000/registrations",
+                    "http://localhost:8000/registrations", //URL chính (không lỗi)
+                    // "http://localhost:8000/registrations/demo-lost-update", //URL demo lỗi Lost Update
                     {
                         method:"POST",
 

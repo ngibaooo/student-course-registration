@@ -75,3 +75,42 @@ class RegistrationService:
                 status_code=400,
                 detail=str(e)
             )
+
+
+# DEMO LỖI
+## Lost Update
+    @staticmethod
+    def register_course_section_lost_update(
+        db,
+        # student_id,
+        user_id,
+        section_id
+    ):
+        student_id = get_student_id_by_user_id(user_id)
+
+        if student_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Không tìm thấy sinh viên"
+            )
+        try:
+
+            RegistrationRepository.register_course_section_lost_update(
+                db,
+                student_id,
+                section_id
+            )
+
+            db.commit()
+
+            return {
+                "message": "Course registration successful"
+            }
+        except Exception as e:
+
+            db.rollback()
+
+            raise HTTPException(
+                status_code=400,
+                detail=str(e)
+            )

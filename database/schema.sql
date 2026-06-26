@@ -201,7 +201,7 @@ CREATE TABLE RegistrationLog
     id INT IDENTITY(1,1) PRIMARY KEY,
 
     action_type VARCHAR(20) NOT NULL
-        CHECK (action_type IN ('REGISTER', 'CANCEL')),
+        CHECK (action_type IN ('REGISTER', 'CANCEL', 'TRANSFER')),
 
     action_date DATETIME NOT NULL
         DEFAULT GETDATE(),
@@ -209,6 +209,8 @@ CREATE TABLE RegistrationLog
     student_id INT NOT NULL,
 
     section_id INT NOT NULL,
+
+    from_section_id INT NULL
 
     CONSTRAINT FK_RegistrationLog_Student
         FOREIGN KEY (student_id)

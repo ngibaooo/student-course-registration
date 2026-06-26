@@ -37,3 +37,20 @@ def cancel_course(
         user_id,
         request.section_id
     )
+
+
+# DEMO LỖI
+## Lost Update
+@router.post("/demo-lost-update")
+def register_course_demo(
+    request: RegisterCourseSectionRequest,
+    current_user: dict = Depends(require_student),
+    db: Session = Depends(get_db)
+):
+    user_id = current_user["user_id"]
+
+    return RegistrationService.register_course_section_lost_update(
+        db,
+        user_id,
+        request.section_id
+    )
