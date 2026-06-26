@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.admin.admin_registration import (router as admin_registration_router)
+from app.api.admin.admin_registration import (router as admin_registration_router,demo_router)
 from app.api.admin.admin_student import router as admin_student_router
 from app.api.admin.admin_course import router as admin_course_router
 from app.api.admin.admin_semester import router as admin_semester_router
@@ -31,6 +31,9 @@ app.include_router(admin_semester_router)
 app.include_router(admin_course_section_router)
 app.include_router(admin_registration_router)
 app.include_router(registration_router)
+
+#API DEMO LOI
+app.include_router(demo_router)
 
 # @app.get("/")
 # def home():

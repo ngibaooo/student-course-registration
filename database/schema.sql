@@ -231,3 +231,21 @@ ON RegistrationLog(section_id);
 CREATE INDEX IX_RegistrationLog_ActionDate
 ON RegistrationLog(action_date);
 GO
+
+-- Thêm constraint cho cột action_type trong RegistrationLog
+
+ALTER TABLE RegistrationLog
+ADD CONSTRAINT CK_RegistrationLog_Action
+CHECK (
+    action_type IN (
+        'REGISTER',
+        'CANCEL',
+        'TRANSFER'
+    )
+);
+
+
+-- Thêm cột from_section_id cho RegistrationLog
+
+ALTER TABLE RegistrationLog
+ADD from_section_id INT NULL;

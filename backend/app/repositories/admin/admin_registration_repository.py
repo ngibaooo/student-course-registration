@@ -111,3 +111,30 @@ class RegistrationRepository:
                 "to_section_id": to_section_id
             }
         )
+# DEMO Loi Non-repeatable Read
+    @staticmethod
+    def demo_admin_read(db, section_id: int):
+        # Gọi Procedure của Admin
+        query = text("""
+            EXEC sp_demo_non_repeatable_read_admin @section_id = :section_id
+        """)
+        return db.execute(
+            query,
+            {"section_id": section_id}
+        ).mappings().first()
+
+    @staticmethod
+    def demo_student_update(db, section_id: int, add_count: int):
+        # Gọi Procedure mô phỏng sinh viên cập nhật
+        query = text("""
+            EXEC sp_demo_non_repeatable_read_student 
+                @section_id = :section_id, 
+                @add_count = :add_count
+        """)
+        db.execute(
+            query,
+            {
+                "section_id": section_id,
+                "add_count": add_count
+            }
+        )
