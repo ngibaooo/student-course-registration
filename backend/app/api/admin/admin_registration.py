@@ -20,10 +20,6 @@ router = APIRouter(
     dependencies=[Depends(require_admin)]
 )
 
-demo_router = APIRouter(
-    tags=["Demo Non-repeatable Read"]
-)
-
 @router.get("/admin/course-sections/{id}/registrations")
 def get_registrations_by_section(
     id: int,
@@ -97,25 +93,3 @@ def transfer_course_section(
         from_section_id=request.from_section_id,
         to_section_id=request.to_section_id
     )
-
-#DEMO LOI
-@demo_router.get("/demo/non-repeatable-read/admin/{section_id}")
-def demo_admin_read(
-    section_id: int,
-    db: Session = Depends(get_db)
-):
-    try:
-        return RegistrationService.demo_admin_read(db, section_id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@demo_router.post("/demo/non-repeatable-read/student/{section_id}")
-def demo_student_update(
-    section_id: int,
-    add_count: int = 3,
-    db: Session = Depends(get_db)
-):
-    try:
-        return RegistrationService.demo_student_update(db, section_id, add_count)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))

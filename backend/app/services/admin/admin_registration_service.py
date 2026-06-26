@@ -142,26 +142,3 @@ class RegistrationService:
                 status_code=400,
                 detail=message
             )
-        
-#DEMO LOI
-    @staticmethod
-    def demo_admin_read(db, section_id: int):
-        try:
-            db.begin()
-            result = RegistrationRepository.demo_admin_read(db, section_id)
-            db.commit()
-            return result
-        except Exception:
-            db.rollback()
-            raise
-
-    @staticmethod
-    def demo_student_update(db, section_id: int, add_count: int):
-        try:
-            db.begin()
-            RegistrationRepository.demo_student_update(db, section_id, add_count)
-            db.commit()
-            return {"message": f"Successfully added {add_count} students to section {section_id}"}
-        except Exception as e:
-            db.rollback()
-            raise HTTPException(status_code=400, detail=str(e))
