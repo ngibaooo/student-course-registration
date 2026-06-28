@@ -93,3 +93,19 @@ def transfer_course_section(
         from_section_id=request.from_section_id,
         to_section_id=request.to_section_id
     )
+
+# DEMO LỖI
+# Deadlock
+@router.put("/admin/registrations/transfer/demo-deadlock")
+def transfer_course_section_deadlock(
+    request: TransferCourseSectionRequest,
+    current_user: dict = Depends(require_admin),
+    db: Session = Depends(get_db)
+):
+
+    return RegistrationService.transfer_course_section_deadlock(
+        db=db,
+        student_id=request.student_id,
+        from_section_id=request.from_section_id,
+        to_section_id=request.to_section_id
+    )
