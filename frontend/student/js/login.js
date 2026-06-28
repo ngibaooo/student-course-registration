@@ -10,17 +10,32 @@ document.addEventListener(
             );
     }
 );
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const token =
         localStorage.getItem("access_token");
     const role = 
         localStorage.getItem("user_role");
+<<<<<<< Updated upstream
     if(token){
         if (role === "STUDENT") {
             window.location.href =
                 "profile.html";
         }else{
+=======
+
+    if(token){
+
+        if (role === "STUDENT") {
+
+            window.location.href =
+                "profile.html";
+        } 
+        else {
+
+            // Tự động chuyển hướng Admin vào đúng trang khi đã có token trước đó
+>>>>>>> Stashed changes
             window.location.href =
                 "../../admin/pages/dashboard.html";
         }
@@ -29,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
 async function login(event){
 
     event.preventDefault();
@@ -121,6 +137,7 @@ async function login(event){
         }
         else{
 
+            // Đã fix lỗi nhảy sai thư mục cho Admin
             window.location.href =
                 "../../admin/pages/dashboard.html";
         }

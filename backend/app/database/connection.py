@@ -41,3 +41,12 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+
+
+try:
+    with engine.connect() as conn:
+        print("KET NOI SQL SERVER THANH CONG")
+except Exception as e:
+    print("LOI KET NOI:", e)
