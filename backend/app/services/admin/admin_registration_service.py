@@ -142,3 +142,38 @@ class RegistrationService:
                 status_code=400,
                 detail=message
             )
+
+# Demo lỗi
+    ## Deadlock
+    @staticmethod
+    def transfer_course_section_deadlock(
+        db,
+        student_id,
+        from_section_id,
+        to_section_id
+    ):
+        try:
+
+            RegistrationRepository.transfer_course_section_deadlock(
+                db,
+                student_id,
+                from_section_id,
+                to_section_id
+            )
+
+            db.commit()
+
+            return {
+                "message": "Transfer course section successfully"
+            }
+
+        except Exception as e:
+
+            db.rollback()
+
+            message = str(e.orig) if hasattr(e, "orig") else str(e)
+
+            raise HTTPException(
+                status_code=400,
+                detail=message
+            )

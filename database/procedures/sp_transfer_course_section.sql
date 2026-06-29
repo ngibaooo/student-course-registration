@@ -129,8 +129,8 @@ BEGIN
             student_id,
             section_id,
             from_section_id,
-            action,
-            action_time
+            action_type,
+            action_date
         )
         VALUES
         (
