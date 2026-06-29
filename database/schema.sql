@@ -249,3 +249,6 @@ CHECK (
 
 ALTER TABLE RegistrationLog
 ADD from_section_id INT NULL;
+
+ALTER TABLE Student
+ADD enrollment_year INT NULL

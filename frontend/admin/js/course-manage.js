@@ -3,6 +3,8 @@ let currentDeleteId = null;
 let allCourses = [];
 
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     fetchCourses();
     const searchInput = document.getElementById("searchCourseInput");
@@ -12,9 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+
 async function fetchCourses(keyword = "") {
     const tableBody = document.getElementById("courseTableBody");
     if (!tableBody) return;
+
+
 
 
     try {
@@ -23,12 +29,18 @@ async function fetchCourses(keyword = "") {
         if (keyword) url = `${API_URL}/courses/search?keyword=${encodeURIComponent(keyword)}`;
 
 
+
+
         const response = await fetch(url, {
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
         });
 
 
+
+
         if (!response.ok) throw new Error("Không thể tải danh sách môn học");
+
+
 
 
         const result = await response.json();
@@ -41,8 +53,12 @@ async function fetchCourses(keyword = "") {
         }
 
 
+
+
         allCourses = courses;
         tableBody.innerHTML = "";
+
+
 
 
         if (!Array.isArray(courses) || courses.length === 0) {
@@ -51,13 +67,27 @@ async function fetchCourses(keyword = "") {
         }
 
 
+
+
         courses.forEach(c => {
             const tr = document.createElement("tr");
+
+
 
 
             let statusBadge = `<span class="badge success">Đang mở</span>`;
             if (c.status && c.status !== 'ACTIVE') {
                 statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
+            }
+
+
+
+
+            let actionButtons = `<a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>`;
+            if (c.status === 'INACTIVE') {
+                actionButtons += `<a href="#" onclick="confirmUnlock(${c.id})" class="action-btn" style="background:#10B981; color:white;"><i class="fa-solid fa-unlock"></i></a>`;
+            } else {
+                actionButtons += `<a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>`;
             }
 
 
@@ -69,8 +99,7 @@ async function fetchCourses(keyword = "") {
                 <td>${statusBadge}</td>
                 <td>
                     <div class="action-icons">
-                        <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                        <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
+                        ${actionButtons}
                     </div>
                 </td>
             `;
@@ -83,6 +112,8 @@ async function fetchCourses(keyword = "") {
 }
 
 
+
+
 function openAddModal() {
     currentEditId = null;
     document.getElementById("modal_course_name").value = "";
@@ -92,9 +123,13 @@ function openAddModal() {
 }
 
 
+
+
 function openEditModal(id) {
     const course = allCourses.find(c => c.id === id);
     if (!course) return;
+
+
 
 
     currentEditId = id;
@@ -105,10 +140,14 @@ function openEditModal(id) {
 }
 
 
+
+
 async function saveCourse() {
     const course_name = document.getElementById("modal_course_name").value.trim();
     const credits = document.getElementById("modal_course_credits").value;
     const description = document.getElementById("modal_course_description").value.trim();
+
+
 
 
     if (!course_name || !credits) {
@@ -117,11 +156,15 @@ async function saveCourse() {
     }
 
 
+
+
     const payload = {
         course_name: course_name,
         credits: parseInt(credits),
         description: description || null
     };
+
+
 
 
     try {
@@ -136,6 +179,8 @@ async function saveCourse() {
         }
 
 
+
+
         const response = await fetch(url, {
             method: method,
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
@@ -143,10 +188,14 @@ async function saveCourse() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Lỗi lưu môn học");
         }
+
+
 
 
         alert("Lưu môn học thành công!");
@@ -158,14 +207,20 @@ async function saveCourse() {
 }
 
 
+
+
 function confirmDelete(id) {
     currentDeleteId = id;
     openModal('delete-modal');
 }
 
 
+
+
 async function executeDelete() {
     if (!currentDeleteId) return;
+
+
 
 
     try {
@@ -179,16 +234,22 @@ async function executeDelete() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Yêu cầu khóa bị từ chối từ Server");
         }
 
 
+
+
         alert("Đã khóa môn học thành công!");
         closeModal('delete-modal');
         currentDeleteId = null;
         fetchCourses();
+
+
 
 
     } catch (error) {
@@ -198,11 +259,58 @@ async function executeDelete() {
 }
 
 
+let currentUnlockId = null;
+
+
+function confirmUnlock(id) {
+    currentUnlockId = id;
+    openModal('unlock-modal');
+}
+
+
+async function executeUnlock() {
+    if (!currentUnlockId) return;
+
+
+    try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/courses/${currentUnlockId}/enable`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.detail || "Yêu cầu mở khóa bị từ chối từ Server");
+        }
+
+
+        alert("Đã mở khóa môn học thành công!");
+        closeModal('unlock-modal');
+        currentUnlockId = null;
+        fetchCourses();
+
+
+    } catch (error) {
+        alert("Lỗi thực hiện mở khóa: " + error.message);
+        console.error("Lỗi Enable:", error);
+    }
+}
+
+
+
+
 // Modal Toggle Functions
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.add('show');
 }
+
+
 
 
 function closeModal(modalId) {
@@ -211,10 +319,16 @@ function closeModal(modalId) {
 }
 
 
+
+
 // Close on outside click
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.classList.remove('show');
     }
 }
+
+
+
+
 

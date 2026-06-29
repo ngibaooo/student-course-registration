@@ -29,6 +29,8 @@
         </div>
 
 
+
+
         <div class="main">
             <!-- Topbar container -->
             <div id="topbar-container">
@@ -42,18 +44,22 @@
             </div>
 
 
+
+
             <div class="course-container">
                 <div class="filter-bar">
                     <div class="filter-left">
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="searchSemesterInput" placeholder="Tìm kiếm tên học kỳ...">
+                            <input type="text" id="searchSemesterInput" placeholder="Tìm kiếm tên học kỳ, năm học...">
                         </div>
                     </div>
                     <button class="btn-primary" onclick="openAddModal()">
                         <i class="fa-solid fa-plus"></i> Thêm học kỳ
                     </button>
                 </div>
+
+
 
 
                 <table class="course-table">
@@ -65,6 +71,7 @@
                             <th>Ngày bắt đầu</th>
                             <th>Ngày kết thúc</th>
                             <th>Đăng ký (Mở - Đóng)</th>
+                            <th>Hạn hủy HP</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
@@ -76,6 +83,8 @@
             </div>
         </div>
     </div>
+
+
 
 
     <!-- Semester Modal -->
@@ -130,6 +139,8 @@
     </div>
 
 
+
+
     <!-- Status Modal -->
     <div class="modal" id="status-modal">
         <div class="modal-content" style="width: 400px; text-align: center;">
@@ -145,9 +156,13 @@
         </div>
     </div>
 
-    <script src="../js/sidebar.js"></script>
+
     <script src="../js/main.js" data-page="semester"></script>
     <script src="../js/semester-manage.js"></script>
 </body>
 </html>
+
+
+
+
 

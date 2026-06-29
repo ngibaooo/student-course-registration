@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchStudents();
 
 
+
+
     const searchInput = document.getElementById("searchStudentInput");
     if (searchInput) {
         searchInput.addEventListener("input", (e) => fetchStudents(e.target.value.trim()));
@@ -9,9 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+
 let currentDeleteId = null;
 let currentEditId = null;
 let allStudents = [];
+
+
 
 
 async function fetchStudents(keyword = "") {
@@ -19,10 +25,14 @@ async function fetchStudents(keyword = "") {
     if (!tableBody) return;
 
 
+
+
     try {
         const token = localStorage.getItem("access_token");
         let url = `${API_URL}/students`;
         if (keyword) url = `${API_URL}/students/search?keyword=${encodeURIComponent(keyword)}`;
+
+
 
 
         const response = await fetch(url, {
@@ -34,7 +44,11 @@ async function fetchStudents(keyword = "") {
         });
 
 
+
+
         if (!response.ok) throw new Error("Server trả về mã lỗi: " + response.status);
+
+
 
 
         const result = await response.json();
@@ -49,7 +63,11 @@ async function fetchStudents(keyword = "") {
         }
 
 
+
+
         tableBody.innerHTML = "";
+
+
 
 
         if (!Array.isArray(students) || students.length === 0) {
@@ -58,7 +76,11 @@ async function fetchStudents(keyword = "") {
         }
 
 
+
+
         allStudents = students;
+
+
 
 
         students.forEach(sv => {
@@ -71,10 +93,14 @@ async function fetchStudents(keyword = "") {
             }
 
 
+
+
             let displayGender = '-';
             if (sv.gender === 'MALE') displayGender = 'Nam';
             else if (sv.gender === 'FEMALE') displayGender = 'Nữ';
             else if (sv.gender === 'OTHER') displayGender = 'Khác';
+
+
 
 
             tr.innerHTML = `
@@ -86,6 +112,7 @@ async function fetchStudents(keyword = "") {
                 <td>${statusBadge}</td>
                 <td>
                     <div class="action-icons">
+                        <a href="#" onclick="openInfoModal('${sv.id}')" class="action-btn edit" style="background:#3b82f6; color:white;"><i class="fa-solid fa-eye"></i></a>
                         <a href="#" onclick="openEditModal('${sv.id}')" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
                         <a href="#" onclick="confirmDelete('${sv.id}')" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
                     </div>
@@ -95,11 +122,15 @@ async function fetchStudents(keyword = "") {
         });
 
 
+
+
     } catch (error) {
         console.error("Lỗi Fetch:", error);
         tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${error.message}</td></tr>`;
     }
 }
+
+
 
 
 async function saveStudent() {
@@ -113,6 +144,8 @@ async function saveStudent() {
     const address = document.getElementById("modal_address").value.trim();
 
 
+
+
     if (!full_name || !email || !department_id) {
         alert("Vui lòng điền các thông tin bắt buộc: Họ tên, Email, Khoa!");
         return;
@@ -122,6 +155,8 @@ async function saveStudent() {
         alert("Vui lòng điền mật khẩu cho sinh viên mới!");
         return;
     }
+
+
 
 
     const payload = {
@@ -146,6 +181,8 @@ async function saveStudent() {
     }
 
 
+
+
     try {
         const token = localStorage.getItem("access_token");
         const response = await fetch(url, {
@@ -158,13 +195,19 @@ async function saveStudent() {
         });
 
 
+
+
         const result = await response.json();
+
+
 
 
         if (!response.ok) {
             const errorMsg = result.detail ? (typeof result.detail === 'object' ? JSON.stringify(result.detail) : result.detail) : "Lỗi không xác định từ Backend";
             throw new Error(errorMsg);
         }
+
+
 
 
         alert(currentEditId ? "Cập nhật sinh viên thành công!" : "Thêm sinh viên thành công!");
@@ -179,7 +222,11 @@ async function saveStudent() {
         document.getElementById("modal_address").value = "";
 
 
+
+
         fetchStudents();
+
+
 
 
     } catch (error) {
@@ -189,14 +236,20 @@ async function saveStudent() {
 }
 
 
+
+
 function confirmDelete(id) {
     currentDeleteId = id;
     openModal('delete-modal');
 }
 
 
+
+
 async function executeDelete() {
     if (!currentDeleteId) return;
+
+
 
 
     try {
@@ -210,10 +263,14 @@ async function executeDelete() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Yêu cầu khóa bị từ chối từ Server");
         }
+
+
 
 
         alert("Đã khóa sinh viên thành công!");
@@ -222,11 +279,15 @@ async function executeDelete() {
         fetchStudents();
 
 
+
+
     } catch (error) {
         alert("Lỗi thực hiện xóa: " + error.message);
         console.error("Lỗi Delete:", error);
     }
 }
+
+
 
 
 // Modal Toggle Functions
@@ -253,6 +314,41 @@ function openEditModal(id) {
 }
 
 
+
+
+function openInfoModal(id) {
+    const sv = allStudents.find(s => s.id == id);
+    if (!sv) return;
+
+
+    let displayGender = '-';
+    if (sv.gender === 'MALE') displayGender = 'Nam';
+    else if (sv.gender === 'FEMALE') displayGender = 'Nữ';
+    else if (sv.gender === 'OTHER') displayGender = 'Khác';
+
+
+    let displayStatus = 'Đang hoạt động';
+    if (sv.status === 'LOCKED') displayStatus = 'Bị khóa';
+    else if (sv.status) displayStatus = sv.status;
+
+
+    document.getElementById("info_id").innerText = sv.id || '-';
+    document.getElementById("info_fullname").innerText = sv.full_name || '-';
+    document.getElementById("info_email").innerText = sv.email || '-';
+    document.getElementById("info_gender").innerText = displayGender;
+    document.getElementById("info_dob").innerText = sv.date_of_birth || '-';
+    document.getElementById("info_phone").innerText = sv.phone || '-';
+    document.getElementById("info_address").innerText = sv.address || '-';
+    document.getElementById("info_department").innerText = sv.department_id || '-';
+    document.getElementById("info_status").innerText = displayStatus;
+
+
+    openModal('student-info-modal');
+}
+
+
+
+
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -274,10 +370,14 @@ function openModal(modalId) {
 }
 
 
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.remove('show');
 }
+
+
 
 
 // Close on outside click
@@ -286,4 +386,8 @@ window.onclick = function(event) {
         event.target.classList.remove('show');
     }
 }
+
+
+
+
 

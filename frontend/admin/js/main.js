@@ -1,11 +1,9 @@
 const API_URL = "http://127.0.0.1:8000/admin";
+const currentScriptTag = document.currentScript;
+const currentPage = currentScriptTag ? currentScriptTag.getAttribute('data-page') : 'dashboard';
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    const currentScriptTag = document.currentScript;
-    const currentPage = currentScriptTag ? currentScriptTag.getAttribute('data-page') : 'dashboard';
-
-
     // 1. Tự động tải Sidebar (Đi từ admin/pages ra components của admin)
     const sidebarContainer = document.getElementById('sidebar-container');
     if (sidebarContainer) {
@@ -20,6 +18,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+
     // 2. Tự động tải Topbar + Đổ dữ liệu thật + Đồng bộ tiêu đề trang
     const topbarContainer = document.getElementById('topbar-container');
     if (topbarContainer) {
@@ -29,14 +29,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 topbarContainer.innerHTML = data;
 
 
+
+
                 // --- TỰ ĐỘNG ĐỔ THÔNG TIN ADMIN LÊN TOPBAR ---
                 const fullName = localStorage.getItem("full_name") || "Quản trị viên";
                 const userId = localStorage.getItem("user_id") || "ADMIN";
 
 
+
+
                 const nameEl = document.getElementById("topbarFullName");
                 const idEl = document.getElementById("topbarStudentId");
                 const avatarEl = document.getElementById("topbarAvatar");
+
+
 
 
                 if (nameEl) nameEl.textContent = fullName;
@@ -45,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Lấy chữ cái đầu tiên của tên làm Avatar đại diện
                     avatarEl.textContent = fullName.charAt(0).toUpperCase();
                 }
+
+
 
 
                 // --- ĐỔI TIÊU ĐỀ CHỮ LỚN GÓC TRÁI THEO TRANG HIỆN TẠI ---
@@ -65,6 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
+
 // 3. Hàm xử lý bật/tắt Popup Modals chung (Hỗ trợ cả class CSS và thuộc tính inline style của Topbar)
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -76,6 +86,8 @@ function openModal(modalId) {
         }
     }
 }
+
+
 
 
 function closeModal(modalId) {
@@ -90,6 +102,8 @@ function closeModal(modalId) {
 }
 
 
+
+
 // 4. HÀM XỬ LÝ ĐĂNG XUẤT SAU KHI ĐÃ BẤM XÁC NHẬN TRÊN POPUP
 async function executeLogout() {
     // Xóa sạch thông tin phiên làm việc cũ lưu trên trình duyệt
@@ -99,11 +113,19 @@ async function executeLogout() {
     localStorage.removeItem("user_id");
 
 
+
+
     // Đóng popup trước khi chuyển trang
     closeModal('logout-confirm-modal');
+
+
 
 
     // Điều hướng đưa tài khoản quay trở lại trang đăng nhập hệ thống
     window.location.href = "../../student/pages/login.html";
 }
+
+
+
+
 

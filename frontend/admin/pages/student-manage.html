@@ -30,6 +30,8 @@
         </div>
 
 
+
+
         <div class="main">
             <!-- Topbar container -->
             <div id="topbar-container">
@@ -41,6 +43,8 @@
                     </div>
                 </div>
             </div>
+
+
 
 
             <div class="course-container">
@@ -55,6 +59,8 @@
                         <i class="fa-solid fa-plus"></i> Thêm sinh viên
                     </button>
                 </div>
+
+
 
 
                 <table class="course-table">
@@ -76,6 +82,8 @@
             </div>
         </div>
     </div>
+
+
 
 
     <!-- Student Modal -->
@@ -137,6 +145,32 @@
     </div>
 
 
+
+
+    <!-- Student Info Modal -->
+    <div class="modal" id="student-info-modal">
+        <div class="modal-content" style="width: 500px;">
+            <div class="modal-header">
+                <h2>Chi tiết Sinh viên</h2>
+                <div class="close-btn" onclick="closeModal('student-info-modal')"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 130px 1fr; gap: 15px; font-size: 14px;">
+                    <strong style="color: #6b7280;">ID:</strong> <span id="info_id"></span>
+                    <strong style="color: #6b7280;">Họ tên:</strong> <span id="info_fullname"></span>
+                    <strong style="color: #6b7280;">Email:</strong> <span id="info_email"></span>
+                    <strong style="color: #6b7280;">Giới tính:</strong> <span id="info_gender"></span>
+                    <strong style="color: #6b7280;">Ngày sinh:</strong> <span id="info_dob"></span>
+                    <strong style="color: #6b7280;">Số điện thoại:</strong> <span id="info_phone"></span>
+                    <strong style="color: #6b7280;">Địa chỉ:</strong> <span id="info_address"></span>
+                    <strong style="color: #6b7280;">Khoa:</strong> <span id="info_department"></span>
+                    <strong style="color: #6b7280;">Trạng thái:</strong> <span id="info_status"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Delete Modal -->
     <div class="modal" id="delete-modal">
         <div class="modal-content" style="width: 400px; text-align: center;">
@@ -152,8 +186,9 @@
         </div>
     </div>
 
-    <script src="../js/sidebar.js"></script>
+
     <script src="../js/main.js" data-page="student"></script>
     <script src="../js/student-manage.js"></script>
 </body>
 </html>
+

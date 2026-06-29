@@ -29,6 +29,8 @@
         </div>
 
 
+
+
         <div class="main">
             <!-- Topbar container -->
             <div id="topbar-container">
@@ -40,6 +42,8 @@
                     </div>
                 </div>
             </div>
+
+
 
 
             <div class="course-container">
@@ -56,13 +60,15 @@
                 </div>
 
 
+
+
                 <table class="course-table">
                     <thead>
                         <tr>
                             <th>ID Lớp</th>
-                            <th>Môn học (ID)</th>
-                            <th>Giảng viên (ID)</th>
-                            <th>Học kỳ (ID)</th>
+                            <th>Môn học</th>
+                            <th>Giảng viên</th>
+                            <th>Học kỳ</th>
                             <th>Lịch học</th>
                             <th>Phòng</th>
                             <th>Sĩ số</th>
@@ -79,6 +85,8 @@
     </div>
 
 
+
+
     <!-- Class Modal -->
     <div class="modal" id="class-modal">
         <div class="modal-content" style="width: 700px;">
@@ -89,16 +97,22 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>ID Môn học</label>
-                        <input type="number" id="modal_class_course" placeholder="Nhập ID Môn học (VD: 1)">
+                        <label>Môn học</label>
+                        <select id="modal_class_course">
+                            <option value="">-- Chọn môn học --</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>ID Giảng viên</label>
-                        <input type="number" id="modal_class_teacher" placeholder="Nhập ID Giảng viên (VD: 1)">
+                        <label>Giảng viên</label>
+                        <select id="modal_class_teacher">
+                            <option value="">-- Chọn giảng viên --</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>ID Học kỳ</label>
-                        <input type="number" id="modal_class_semester" placeholder="Nhập ID Học kỳ (VD: 1)">
+                        <label>Học kỳ</label>
+                        <select id="modal_class_semester">
+                            <option value="">-- Chọn học kỳ --</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Phòng học</label>
@@ -138,11 +152,8 @@
     </div>
 
 
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
     <!-- Delete Modal -->
     <div class="modal" id="delete-modal">
         <div class="modal-content" style="width: 400px; text-align: center;">
@@ -158,22 +169,13 @@
         </div>
     </div>
 
-<<<<<<< Updated upstream
-    <script src="../js/sidebar.js"></script>
-=======
 
-
-
->>>>>>> Stashed changes
     <script src="../js/main.js" data-page="class"></script>
     <script src="../js/class-manage.js"></script>
 </body>
 </html>
 
-<<<<<<< Updated upstream
-=======
 
 
 
 
->>>>>>> Stashed changes

@@ -3,27 +3,75 @@ let currentDeleteId = null;
 let allClasses = [];
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetchClasses();
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchDropdowns();
+    await fetchClasses();
+   
     const searchInput = document.getElementById("searchClassInput");
     if (searchInput) {
-        searchInput.addEventListener("input", (e) => fetchClasses(e.target.value.trim()));
+        searchInput.addEventListener("input", (e) => filterClasses(e.target.value.trim()));
     }
 });
 
 
-async function fetchClasses(keyword = "") {
+async function fetchDropdowns() {
+    try {
+        const token = localStorage.getItem("access_token");
+        const headers = { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" };
+       
+        const [courseRes, lecturerRes, semesterRes] = await Promise.all([
+            fetch(`${API_URL}/course-sections/dropdown/course`, { headers }),
+            fetch(`${API_URL}/course-sections/dropdown/lecturer`, { headers }),
+            fetch(`${API_URL}/course-sections/dropdown/semester`, { headers })
+        ]);
+       
+        const courses = courseRes.ok ? await courseRes.json() : [];
+        const lecturers = lecturerRes.ok ? await lecturerRes.json() : [];
+        const semesters = semesterRes.ok ? await semesterRes.json() : [];
+       
+        const courseSelect = document.getElementById("modal_class_course");
+        if (courseSelect) {
+            courses.forEach(c => {
+                const opt = document.createElement("option");
+                opt.value = c.id;
+                opt.textContent = `${c.id} - ${c.course_name}`;
+                courseSelect.appendChild(opt);
+            });
+        }
+       
+        const lecturerSelect = document.getElementById("modal_class_teacher");
+        if (lecturerSelect) {
+            lecturers.forEach(l => {
+                const opt = document.createElement("option");
+                opt.value = l.id;
+                opt.textContent = `${l.id} - ${l.full_name}`;
+                lecturerSelect.appendChild(opt);
+            });
+        }
+       
+        const semesterSelect = document.getElementById("modal_class_semester");
+        if (semesterSelect) {
+            semesters.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s.id;
+                opt.textContent = `${s.id} - ${s.semester_name} (${s.academic_year})`;
+                semesterSelect.appendChild(opt);
+            });
+        }
+    } catch (e) {
+        console.error("Lỗi tải dữ liệu dropdown:", e);
+    }
+}
+
+
+async function fetchClasses() {
     const tableBody = document.getElementById("classTableBody");
     if (!tableBody) return;
 
 
     try {
         const token = localStorage.getItem("access_token");
-        let url = `${API_URL}/course-sections`;
-        if (keyword) url = `${API_URL}/course-sections/search?keyword=${encodeURIComponent(keyword)}`;
-
-
-        const response = await fetch(url, {
+        const response = await fetch(`${API_URL}/course-sections`, {
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" }
         });
 
@@ -42,47 +90,69 @@ async function fetchClasses(keyword = "") {
 
 
         allClasses = classes;
-        tableBody.innerHTML = "";
-
-
-        if (!Array.isArray(classes) || classes.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#6b7280; padding:40px;">Không tìm thấy lớp học phần nào</td></tr>`;
-            return;
-        }
-
-
-        classes.forEach(c => {
-            const tr = document.createElement("tr");
-
-
-            let statusBadge = `<span class="badge success">Đang mở</span>`;
-            if (c.status && c.status !== 'ACTIVE') {
-                statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
-            }
-
-
-            tr.innerHTML = `
-                <td><strong>${c.id}</strong></td>
-                <td>HP${c.course_id}</td>
-                <td>GV${c.lecturer_id}</td>
-                <td>HK${c.semester_id}</td>
-                <td>Thứ ${c.schedule_day} (${c.start_period}-${c.end_period})</td>
-                <td>${c.classroom}</td>
-                <td>${c.registered_students || 0}/${c.maximum_students}</td>
-                <td>${statusBadge}</td>
-                <td>
-                    <div class="action-icons">
-                        <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                        <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
-                    </div>
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
+        renderClasses(allClasses);
     } catch (e) {
         console.error(e);
         tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${e.message}</td></tr>`;
     }
+}
+
+
+function filterClasses(keyword) {
+    if (!keyword) {
+        renderClasses(allClasses);
+        return;
+    }
+    const lowerKeyword = keyword.toLowerCase();
+    const filtered = allClasses.filter(c =>
+        (c.course_name && c.course_name.toLowerCase().includes(lowerKeyword)) ||
+        (c.lecturer_name && c.lecturer_name.toLowerCase().includes(lowerKeyword)) ||
+        (c.semester_name && c.semester_name.toLowerCase().includes(lowerKeyword)) ||
+        (c.id.toString().includes(lowerKeyword))
+    );
+    renderClasses(filtered);
+}
+
+
+function renderClasses(classes) {
+    const tableBody = document.getElementById("classTableBody");
+    tableBody.innerHTML = "";
+
+
+    if (!Array.isArray(classes) || classes.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#6b7280; padding:40px;">Không tìm thấy lớp học phần nào</td></tr>`;
+        return;
+    }
+
+
+    classes.forEach(c => {
+        const tr = document.createElement("tr");
+
+
+        let statusBadge = `<span class="badge success">Đang mở</span>`;
+        if (c.status && c.status !== 'ACTIVE') {
+            statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
+        }
+
+
+        tr.innerHTML = `
+            <td><strong>${c.id}</strong></td>
+            <td>${c.course_name || 'HP' + c.course_id}</td>
+            <td>${c.lecturer_name || 'GV' + c.lecturer_id}</td>
+            <td>${c.semester_name || 'HK' + c.semester_id}</td>
+            <td>Thứ ${c.schedule_day} (${c.start_period}-${c.end_period})</td>
+            <td>${c.classroom}</td>
+            <td>${c.registered_students || 0}/${c.maximum_students}</td>
+            <td>${statusBadge}</td>
+            <td>
+                <div class="action-icons">
+                    <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
+                    <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(tr);
+    });
 }
 
 
@@ -239,3 +309,4 @@ window.onclick = function(event) {
         event.target.classList.remove('show');
     }
 }
+

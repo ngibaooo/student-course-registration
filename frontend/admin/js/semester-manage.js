@@ -4,6 +4,8 @@ let currentToggleAction = null; // 'open' or 'close'
 let allSemesters = [];
 
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     fetchSemesters();
     const searchInput = document.getElementById("searchSemesterInput");
@@ -14,9 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+
+
 async function fetchSemesters() {
     const tableBody = document.getElementById("semesterTableBody");
     if (!tableBody) return;
+
+
 
 
     try {
@@ -26,7 +32,11 @@ async function fetchSemesters() {
         });
 
 
+
+
         if (!response.ok) throw new Error("Không thể tải danh sách học kỳ");
+
+
 
 
         const result = await response.json();
@@ -39,6 +49,8 @@ async function fetchSemesters() {
         }
 
 
+
+
         allSemesters = semesters;
         renderSemesters(allSemesters);
     } catch (e) {
@@ -46,6 +58,8 @@ async function fetchSemesters() {
         tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${e.message}</td></tr>`;
     }
 }
+
+
 
 
 function filterSemesters(keyword) {
@@ -62,9 +76,13 @@ function filterSemesters(keyword) {
 }
 
 
+
+
 function renderSemesters(semesters) {
     const tableBody = document.getElementById("semesterTableBody");
     tableBody.innerHTML = "";
+
+
 
 
     if (!Array.isArray(semesters) || semesters.length === 0) {
@@ -73,8 +91,12 @@ function renderSemesters(semesters) {
     }
 
 
+
+
     semesters.forEach(s => {
         const tr = document.createElement("tr");
+
+
 
 
         let statusBadge = `<span class="badge success">Đang mở</span>`;
@@ -91,10 +113,14 @@ function renderSemesters(semesters) {
         };
 
 
+
+
         const isClosed = s.status === 'CLOSED';
         const toggleIcon = isClosed ? "fa-lock-open" : "fa-lock";
         const toggleAction = isClosed ? "open" : "close";
         const toggleTitle = isClosed ? "Mở học kỳ" : "Đóng học kỳ";
+
+
 
 
         tr.innerHTML = `
@@ -107,6 +133,7 @@ function renderSemesters(semesters) {
                 <div><span style="color:#16A34A;">Mở:</span> ${formatDT(s.registration_open_date)}</div>
                 <div><span style="color:#DC2626;">Đóng:</span> ${formatDT(s.registration_close_date)}</div>
             </td>
+            <td style="font-size: 13px; color:#DC2626; font-weight:600;">${formatDT(s.cancel_deadline)}</td>
             <td>${statusBadge}</td>
             <td>
                 <div class="action-icons">
@@ -120,6 +147,8 @@ function renderSemesters(semesters) {
 }
 
 
+
+
 function formatDatetimeForInput(dtStr) {
     if (!dtStr) return "";
     const dt = new Date(dtStr);
@@ -128,6 +157,8 @@ function formatDatetimeForInput(dtStr) {
     const localISOTime = (new Date(dt - tzoffset)).toISOString().slice(0, 16);
     return localISOTime;
 }
+
+
 
 
 function openAddModal() {
@@ -143,9 +174,13 @@ function openAddModal() {
 }
 
 
+
+
 function openEditModal(id) {
     const sem = allSemesters.find(s => s.id === id);
     if (!sem) return;
+
+
 
 
     currentEditId = id;
@@ -159,8 +194,12 @@ function openEditModal(id) {
     document.getElementById("modal_reg_cancel").value = formatDatetimeForInput(sem.cancel_deadline);
 
 
+
+
     openModal('semester-modal');
 }
+
+
 
 
 async function saveSemester() {
@@ -174,15 +213,21 @@ async function saveSemester() {
     let regCancel = document.getElementById("modal_reg_cancel").value;
 
 
+
+
     if (!name || !year || !start || !end || !regOpen || !regClose || !regCancel) {
         alert("Vui lòng điền đầy đủ tất cả thông tin!");
         return;
     }
 
 
+
+
     if (regOpen.length === 16) regOpen += ":00";
     if (regClose.length === 16) regClose += ":00";
     if (regCancel.length === 16) regCancel += ":00";
+
+
 
 
     const payload = {
@@ -194,6 +239,8 @@ async function saveSemester() {
         registration_close_date: regClose,
         cancel_deadline: regCancel
     };
+
+
 
 
     try {
@@ -208,6 +255,8 @@ async function saveSemester() {
         }
 
 
+
+
         const response = await fetch(url, {
             method: method,
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
@@ -215,10 +264,14 @@ async function saveSemester() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail ? JSON.stringify(result.detail) : "Lỗi lưu học kỳ");
         }
+
+
 
 
         alert("Lưu học kỳ thành công!");
@@ -228,6 +281,8 @@ async function saveSemester() {
         alert(e.message);
     }
 }
+
+
 
 
 function confirmToggleStatus(id, action) {
@@ -244,8 +299,12 @@ function confirmToggleStatus(id, action) {
 }
 
 
+
+
 async function executeToggleStatus() {
     if (!currentToggleId || !currentToggleAction) return;
+
+
 
 
     try {
@@ -256,10 +315,14 @@ async function executeToggleStatus() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Yêu cầu bị từ chối từ Server");
         }
+
+
 
 
         alert("Thay đổi trạng thái thành công!");
@@ -269,10 +332,14 @@ async function executeToggleStatus() {
         fetchSemesters();
 
 
+
+
     } catch (error) {
         alert("Lỗi thực hiện thay đổi: " + error.message);
     }
 }
+
+
 
 
 // Modal Toggle Functions
@@ -282,10 +349,14 @@ function openModal(modalId) {
 }
 
 
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.remove('show');
 }
+
+
 
 
 window.onclick = function(event) {
@@ -293,3 +364,6 @@ window.onclick = function(event) {
         event.target.classList.remove('show');
     }
 }
+
+
+

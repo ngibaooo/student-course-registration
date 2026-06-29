@@ -10,77 +10,61 @@
 </head>
 <body>
     <div class="container">
-        <div id="sidebar-container">
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <div class="logo"><i class="fa-solid fa-user-shield"></i></div>
-                    <div>
-                        <h2>Admin</h2>
-                        <span>Cổng quản trị</span>
-                    </div>
-                </div>
-                <div class="menu">
-                    <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
-                    <a href="student-manage.html" class="menu-item"><i class="fa-solid fa-user-graduate"></i><span>Quản lý sinh viên</span></a>
-                    <a href="course-manage.html" class="menu-item"><i class="fa-solid fa-book"></i><span>Quản lý môn học</span></a>
-                    <a href="semester-manage.html" class="menu-item"><i class="fa-solid fa-calendar-days"></i><span>Quản lý học kỳ</span></a>
-                    <a href="class-manage.html" class="menu-item"><i class="fa-solid fa-rectangle-list"></i><span>Quản lý lớp HP</span></a>
-                </div>
-                <div class="logout">
-                    <a href="#" class="menu-item" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Đăng xuất</span></a>
-                </div>
-            </div>
-        </div>
+        <div id="sidebar-container"></div>
         <div class="main">
-            <div class="topbar">
-                <h1>Dashboard</h1>
-                <div class="user-box">
-                    <div>
-                        <div class="user-name">Quản trị viên</div>
-                        <div class="user-id">Admin Portal</div>
-                    </div>
-                    <div class="avatar-small">A</div>
-                </div>
-            </div>
+            <!-- Topbar container -->
+            <div id="topbar-container"></div>
+
 
             <div class="summary-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin: 30px;">
                 <div class="summary-card" style="background: white; border-radius: 15px; padding: 30px; text-align: center;">
                     <p style="color: #6b7280; margin-bottom: 10px;">Tổng số sinh viên</p>
-                    <h2 style="color: #2563eb; font-size: 36px;">12,450</h2>
+                    <h2 id="totalStudents" style="color: #2563eb; font-size: 36px;">...</h2>
                 </div>
                 <div class="summary-card" style="background: white; border-radius: 15px; padding: 30px; text-align: center;">
                     <p style="color: #6b7280; margin-bottom: 10px;">Tổng số môn học</p>
-                    <h2 style="color: #2563eb; font-size: 36px;">320</h2>
+                    <h2 id="totalCourses" style="color: #2563eb; font-size: 36px;">...</h2>
                 </div>
                 <div class="summary-card" style="background: white; border-radius: 15px; padding: 30px; text-align: center;">
                     <p style="color: #6b7280; margin-bottom: 10px;">Tổng số học kỳ</p>
-                    <h2 style="color: #2563eb; font-size: 36px;">8</h2>
+                    <h2 id="totalSemesters" style="color: #2563eb; font-size: 36px;">...</h2>
                 </div>
                 <div class="summary-card" style="background: white; border-radius: 15px; padding: 30px; text-align: center;">
                     <p style="color: #6b7280; margin-bottom: 10px;">Lớp học phần</p>
-                    <h2 style="color: #2563eb; font-size: 36px;">1,150</h2>
+                    <h2 id="totalClasses" style="color: #2563eb; font-size: 36px;">...</h2>
                 </div>
             </div>
+
 
             <div style="display: flex; gap: 25px; margin: 0 30px 30px;">
                 <div class="registered-container" style="background: white; padding: 25px; border-radius: 15px; flex: 2;">
                     <h2 style="margin-bottom: 25px;">Lớp học phần mới tạo</h2>
                     <table class="course-table" style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="border-bottom: 1px solid #e5e7eb;"><th style="text-align: left; padding: 15px;">Mã lớp HP</th><th style="text-align: left; padding: 15px;">Tên môn học</th><th style="text-align: left; padding: 15px;">Giảng viên</th><th style="text-align: left; padding: 15px;">Sĩ số</th></tr>
+                            <tr style="border-bottom: 1px solid #e5e7eb;"><th style="text-align: left; padding: 15px;">Mã lớp HP</th><th style="text-align: left; padding: 15px;">Tên môn học</th><th style="text-align: left; padding: 15px;">Giảng viên</th><th style="text-align: left; padding: 15px;">Sĩ số</th><th style="text-align: center; padding: 15px;">Thao tác</th></tr>
                         </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #e5e7eb;"><td style="padding: 18px 15px;">IT001.O11</td><td style="padding: 18px 15px;">Nhập môn lập trình</td><td style="padding: 18px 15px;">Nguyễn Văn A</td><td style="padding: 18px 15px;">45/50</td></tr>
+                        <tbody id="recentClassesTable">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px;">Đang tải...</td></tr>
                         </tbody>
                     </table>
                 </div>
-                <div style="background: white; padding: 25px; border-radius: 15px; flex: 1; text-align: center; color: #6b7280; display: flex; justify-content: center; align-items: center; border: 2px dashed #e5e7eb;">
-                    [ Biểu đồ Thống Kê ]
+                <div style="background: white; padding: 25px; border-radius: 15px; flex: 1; text-align: center; display: flex; flex-direction: column; gap: 30px;">
+                    <div style="position: relative; height: 250px; width: 100%;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div style="position: relative; height: 250px; width: 100%;">
+                        <canvas id="genderChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+        
     </div>
 
-    <script src="../js/sidebar.js"></script>
+
+    <script src="../js/main.js" data-page="dashboard"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="../js/dashboard.js"></script>
 </body>
 </html>
+
