@@ -151,3 +151,23 @@ def demo_student_update(
         return CourseSectionService.demo_student_update(db, section_id, add_count)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/{course_id}/courses")
+def get_course_sections_by_course(
+    course_id: int,
+    db: Session = Depends(get_db)
+):
+
+    try:
+
+        return CourseSectionService.get_course_sections_by_course(
+            db,
+            course_id
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
