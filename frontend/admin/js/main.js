@@ -61,7 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     'student': 'Quản lý sinh viên',
                     'course': 'Quản lý môn học',
                     'semester': 'Quản lý học kỳ',
-                    'class': 'Quản lý lớp học phần'
+                    'class': 'Quản lý lớp học phần',
+                    'registration': "Quản lý đăng ký học phần"
                 };
                 const titleEl = document.getElementById("pageTitle");
                 if (titleEl && titleMap[currentPage]) {
