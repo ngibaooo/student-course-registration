@@ -75,6 +75,9 @@ class RegistrationRepository:
 
         query = text("""
             SELECT
+                s.id AS student_id,
+                u.full_name AS student_name,
+                s.date_of_birth,
                 cr.section_id,
 
                 cs.course_id,
@@ -99,6 +102,11 @@ class RegistrationRepository:
 
             FROM CourseRegistration cr
 
+            JOIN Student s
+                ON cr.student_id = s.id
+
+            JOIN [User] u
+                ON s.user_id = u.id
             JOIN CourseSection cs
                 ON cr.section_id = cs.id
 
@@ -124,7 +132,7 @@ class RegistrationRepository:
                 "student_id": student_id
             }
         ).mappings().all()
-        
+
     @staticmethod
     def statistics_course_sections(db):
         # Gọi thẳng View đã tạo trong DB
