@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Nếu đang ở bất kỳ trang con nào của Quản lý đăng ký
                     if(
                         currentPage === "registration-manage" ||
-                        currentPage === "registration-history"
+                        currentPage === "registration-student-history" ||
+                        currentPage === "registration-log" 
                     ){
 
                         // Mở submenu
@@ -94,7 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     'course': 'Quản lý môn học',
                     'semester': 'Quản lý học kỳ',
                     'class': 'Quản lý lớp học phần',
-                    'registration': "Quản lý đăng ký học phần"
+                    'registration-manage': "Quản lý đăng kí học phần",
+                    'registration-student-history': "Quản lý đăng kí học phần",
+                    'registration-log': "Quản lý đăng kí học phần",
                 };
                 const titleEl = document.getElementById("pageTitle");
                 if (titleEl && titleMap[currentPage]) {

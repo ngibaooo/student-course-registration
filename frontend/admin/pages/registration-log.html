@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Lịch sử thao tác sinh viên</title>
+
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/registration-log.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+
+        <div id="topbar-container"></div>
+
+        <div class="content">
+
+            <div class="page-header">
+                <h2>Lịch sử thao tác sinh viên</h2>
+            </div>
+
+            <!-- Search -->
+
+            <div class="search-card">
+
+                <label>Mã sinh viên</label>
+
+                <div class="search-box">
+
+                    <input
+                            type="number"
+                            id="studentIdInput"
+                            placeholder="Nhập mã sinh viên">
+
+                    <button id="searchBtn">
+
+                        <i class="fa-solid fa-magnifying-glass"></i>
+
+                        Tra cứu
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Student info -->
+
+            <div
+                    class="student-card"
+                    id="studentInfoCard"
+                    style="display:none;">
+
+                <h3>Thông tin sinh viên</h3>
+
+                <div class="student-info">
+
+                    <div>
+
+                        <span>Mã sinh viên</span>
+
+                        <strong id="studentId"></strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Họ tên</span>
+
+                        <strong id="studentName"></strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>Ngày sinh</span>
+
+                        <strong id="studentDob"></strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- History table -->
+
+            <div
+                    class="history-card"
+                    id="historyCard"
+                    style="display:none;">
+
+                <h3>Lịch sử đăng ký</h3>
+
+                <table>
+
+                   <thead>
+
+                    <tr>
+
+                        <th>STT</th>
+                        <th>Thao tác</th>
+                        <th>Môn học</th>
+                        <th>Phòng học</th>
+                        <th>Thời gian</th>
+                        <th>Chi tiết</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="logTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/sidebar.js"></script>
+<script src="../js/main.js" data-page="registration-log"></script>
+<script src="../js/registration-log.js"></script>
+
+</body>
+
+</html>
