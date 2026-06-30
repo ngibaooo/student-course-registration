@@ -181,35 +181,68 @@ function renderSchedule(){
                     )
 
                 );
-
             if(course){
 
-                row += `
-                    <td class="schedule-cell">
+                if(course.section_status === "INACTIVE"){
 
-                        <div class="course-block">
+                    row += `
+                        <td class="schedule-cell">
 
-                            <div class="course-name">
-                                ${course.course_name}
+                            <div class="course-block disabled">
+
+                                <div class="course-overlay">
+                                    Lớp học đang tạm ngưng
+                                </div>
+
+                                <div class="course-name">
+                                    ${course.course_name}
+                                </div>
+
+                                <div class="classroom">
+                                    Phòng học: ${course.classroom}
+                                </div>
+                                <div class="course-period">
+                                    Tiết:
+                                    ${course.start_period}
+                                    -
+                                    ${course.end_period}
+                                </div>
+                                <div class="ca-time">
+                                    ${ca.time}
+                                </div>
+                            </div>
+                        </td>
+                    `;
+                }
+                else{
+                    row += `
+                        <td class="schedule-cell">
+                            <div class="course-block">                            
+                                <div class="course-name">
+                                    ${course.course_name}
+                                </div>
+
+                                <div class="classroom">
+                                    Phòng học: ${course.classroom}
+                                </div>
+
+                                <div class="course-period">
+                                    Tiết:
+                                    ${course.start_period}
+                                    -
+                                    ${course.end_period}
+                                </div>
+
+                                <div class="ca-time">
+                                    ${ca.time}
+                                </div>
+
                             </div>
 
-                            <div class="classroom">
-                                Phòng học: ${course.classroom}
-                            </div>
+                        </td>
+                    `;
+                }
 
-                            <div class="course-period">
-                                Tiết: ${course.start_period}
-                                -
-                                ${course.end_period}
-                            </div>
-                             <div class="ca-time">
-                                ${ca.time}
-                            </div>
-
-                        </div>
-
-                    </td>
-                `;
             }
             else{
 

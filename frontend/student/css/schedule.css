@@ -193,3 +193,62 @@
     font-weight:500;
 
 }
+.course-block.disabled{
+
+    background:#f3f4f6;
+
+    border:1px solid #d1d5db;
+
+    color:#6b7280;
+
+    opacity:.8;
+}
+
+.course-block.disabled .course-name{
+
+    color:#6b7280;
+
+    text-decoration:line-through;
+}
+
+.course-status{
+
+    margin-top:10px;
+
+    font-size:13px;
+
+    color:#dc2626;
+
+    font-weight:700;
+
+    text-align:center;
+}
+.course-overlay{
+
+    border-radius:8px;
+
+    padding:8px;
+    margin: 8px;
+
+    font-size:13px;
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:rgba(237, 237, 237, 0.75);
+
+    font-size:13px;
+    font-weight:700;
+
+    color:#dc2626;
+
+    text-align:center;
+
+    backdrop-filter:blur(0.1px);
+
+    z-index:10;
+}
