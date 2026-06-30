@@ -143,6 +143,17 @@ class RegistrationService:
                 detail=message
             )
 
+    @staticmethod
+    def get_registration_log_by_student_id(
+        db,
+        student_id
+    ):
+
+        return RegistrationRepository.get_registration_log_by_student_id(
+            db,
+            student_id
+        )
+
 # Demo lỗi
     ## Deadlock
     @staticmethod

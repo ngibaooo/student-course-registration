@@ -93,6 +93,16 @@ def transfer_course_section(
         from_section_id=request.from_section_id,
         to_section_id=request.to_section_id
     )
+@router.get("/admin/students/{student_id}/registration-log")
+def get_registration_log(
+    student_id: int,
+    db: Session = Depends(get_db)
+):
+
+    return RegistrationService.get_registration_log_by_student_id(
+        db,
+        student_id
+    )
 
 # DEMO LỖI
 # Deadlock

@@ -176,6 +176,57 @@ class RegistrationRepository:
                 "to_section_id": to_section_id
             }
         )
+    @staticmethod
+    def get_registration_log_by_student_id(
+        db,
+        student_id
+    ):
+        query = text("""
+            SELECT
+                RL.id,
+                RL.action_type,
+                RL.action_date,
+
+                S.id AS student_id,
+                U.full_name AS student_name,
+                S.date_of_birth,
+
+                RL.section_id,
+                C.course_name,
+
+                CS.classroom,
+
+                RL.from_section_id,
+                OldCS.classroom AS from_classroom
+
+            FROM RegistrationLog RL
+
+            LEFT JOIN CourseSection OldCS
+                ON RL.from_section_id = OldCS.id
+            
+            INNER JOIN Student S
+                ON RL.student_id = S.id
+
+            INNER JOIN [User] U
+                ON S.user_id = U.id
+
+            INNER JOIN CourseSection CS
+                ON RL.section_id = CS.id
+
+            INNER JOIN Course C
+                ON CS.course_id = C.id
+
+            WHERE RL.student_id = :student_id
+
+            ORDER BY RL.action_date DESC
+        """)
+
+        return db.execute(
+            query,
+            {
+                "student_id": student_id
+            }
+        ).mappings().all()
 
 # DEMO LỖI
     ## Deadlock
