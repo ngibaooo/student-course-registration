@@ -15,6 +15,7 @@ SELECT
     cs.schedule_day,
     cs.start_period,
     cs.end_period,
+    cs.status AS section_status,
 
     l.full_name AS lecturer_name,
 

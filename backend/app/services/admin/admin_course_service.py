@@ -101,6 +101,10 @@ class CourseService:
                 db,
                 course_id
             )
+            CourseRepository.disable_course_sections(
+                db,
+                course_id
+            )
 
             db.commit()
 
@@ -133,6 +137,10 @@ class CourseService:
                 )
 
             CourseRepository.enable(
+                db,
+                course_id
+            )
+            CourseRepository.enable_course_sections(
                 db,
                 course_id
             )
