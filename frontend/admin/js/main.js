@@ -11,8 +11,40 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(res => res.text())
             .then(data => {
                 sidebarContainer.innerHTML = data;
+
+                // Active menu hiện tại
                 const activeMenu = document.getElementById(`menu-${currentPage}`);
-                if (activeMenu) activeMenu.classList.add('active');
+                if (activeMenu) {
+                    activeMenu.classList.add("active");
+                }
+
+                const group = sidebarContainer.querySelector(".menu-group");
+                const toggle = sidebarContainer.querySelector(".menu-toggle");
+
+                if(group && toggle){
+
+                    // Nếu đang ở bất kỳ trang con nào của Quản lý đăng ký
+                    if(
+                        currentPage === "registration-manage" ||
+                        currentPage === "registration-history"
+                    ){
+
+                        // Mở submenu
+                        group.classList.add("open");
+
+                        // Active menu cha
+                        toggle.classList.add("active");
+                    }
+
+                    toggle.addEventListener("click",(e)=>{
+
+                        e.preventDefault();
+
+                        group.classList.toggle("open");
+
+                    });
+
+                }
             })
             .catch(err => console.error("Lỗi tải Sidebar:", err));
     }
