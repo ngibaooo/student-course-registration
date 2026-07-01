@@ -320,3 +320,56 @@ class CourseSectionRepository:
                 "add_count": add_count
             }
         )
+
+    @staticmethod
+    def get_course_sections_by_course(
+        db,
+        course_id
+    ):
+
+        query = text("""
+            SELECT
+                cs.id AS section_id,
+
+                c.course_name,
+
+                cs.classroom,
+
+                cs.schedule_day,
+
+                cs.start_period,
+
+                cs.end_period,
+
+                cs.maximum_students,
+
+                cs.registered_students,
+
+                l.full_name AS lecturer_name,
+
+                sem.semester_name
+
+            FROM CourseSection cs
+
+            JOIN Course c
+                ON cs.course_id = c.id
+
+            JOIN Semester sem
+                ON cs.semester_id = sem.id
+
+            LEFT JOIN Lecturer l
+                ON cs.lecturer_id = l.id
+
+            WHERE cs.course_id = :course_id
+            AND cs.status = 'ACTIVE'
+
+            ORDER BY
+                cs.id
+        """)
+
+        return db.execute(
+            query,
+            {
+                "course_id": course_id
+            }
+        ).mappings().all()

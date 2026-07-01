@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Quản lý đăng ký học phần</title>
+
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/topbar.css">
+    <link rel="stylesheet" href="../css/registration-manage.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+
+        <div id="topbar-container"></div>
+
+        <div class="content">
+
+            <div class="page-header">
+
+                <h2>
+                    Chuyển lớp học phần
+                </h2>
+
+            </div>
+
+            <!-- Bộ lọc -->
+
+            <div class="filter-card">
+
+                <div class="filter-group">
+
+                    <label>Mã sinh viên</label>
+
+                    <input
+                        type="text"
+                        id="studentId"
+                        placeholder="Nhập mã sinh viên">
+
+                </div>
+
+                <button id="searchBtn">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Tìm kiếm
+
+                </button>
+
+            </div>
+
+            <!-- Thông tin sinh viên -->
+
+            <div class="student-card">
+
+                <h3>Thông tin sinh viên</h3>
+
+                <div id="studentInfo">
+
+                    Chưa chọn sinh viên
+
+                </div>
+
+            </div>
+
+            <!-- Danh sách học phần -->
+
+            <div class="table-card">
+
+                <h3>Danh sách học phần đã đăng ký</h3>
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Mã HP</th>
+                        <th>Môn học</th>
+                        <th>Giảng viên</th>
+                        <th>Phòng</th>
+                        <th>Thứ</th>
+                        <th>Tiết</th>
+                        <th>Thao tác</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="registrationTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/sidebar.js"></script>
+<!-- <script src="../js/topbar.js"></script> -->
+<script src="../js/main.js" data-page="registration-manage"></script>
+<script src="../js/registration-manage.js"></script>
+
+</body>
+</html>

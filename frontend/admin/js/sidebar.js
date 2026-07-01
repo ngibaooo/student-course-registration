@@ -45,4 +45,3 @@ async function logout() {
         window.location.href = "../../student/pages/login.html";
     }
 }
-

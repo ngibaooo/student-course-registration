@@ -187,7 +187,32 @@ class CourseSectionService:
     def get_semester_dropdown(db):
 
         return CourseSectionRepository.get_semester_dropdown(db)
+    @staticmethod
+    def get_course_sections_by_course(
+        db,
+        course_id
+    ):
 
+        try:
+
+            db.begin()
+
+            result = (
+                CourseSectionRepository
+                .get_course_sections_by_course(
+                    db,
+                    course_id
+                )
+            )
+
+            db.commit()
+
+            return result
+
+        except Exception:
+
+            db.rollback()
+            raise
 
 
 #DEMO LOI

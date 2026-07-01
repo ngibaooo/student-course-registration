@@ -86,6 +86,18 @@ class CourseRepository:
             query,
             {"id": course_id}
         )
+    @staticmethod
+    def disable_course_sections(db, course_id):
+        query = text("""
+            UPDATE CourseSection
+            SET status = 'INACTIVE'
+            WHERE course_id = :course_id
+        """)
+
+        db.execute(
+            query,
+            {"course_id": course_id}
+        )
 
     @staticmethod
     def enable(db, course_id):
@@ -98,6 +110,18 @@ class CourseRepository:
         db.execute(
             query,
             {"id": course_id}
+        )
+    @staticmethod
+    def enable_course_sections(db, course_id):
+        query = text("""
+            UPDATE CourseSection
+            SET status = 'ACTIVE'
+            WHERE course_id = :course_id
+        """)
+
+        db.execute(
+            query,
+            {"course_id": course_id}
         )
 
     @staticmethod

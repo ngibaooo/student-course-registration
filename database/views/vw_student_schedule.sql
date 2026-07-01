@@ -1,7 +1,6 @@
-IF OBJECT_ID('vw_student_schedule', 'V') IS NOT NULL
-    DROP VIEW vw_student_schedule;
+IF OBJECT_ID('dbo.vw_student_schedule', 'V') IS NOT NULL
+    DROP VIEW dbo.vw_student_schedule;
 GO
-
 CREATE VIEW vw_student_schedule
 AS
 SELECT
@@ -16,13 +15,14 @@ SELECT
     cs.schedule_day,
     cs.start_period,
     cs.end_period,
+    cs.status AS section_status,
 
     l.full_name AS lecturer_name,
 
     sem.semester_name,
     sem.academic_year,
     sem.start_date,
-    sem.end_date 
+    sem.end_date
 
 FROM CourseRegistration cr
 
@@ -41,8 +41,7 @@ JOIN Course c
 JOIN Semester sem
     ON cs.semester_id = sem.id
 
-LEFT JOIN Lecturer l ON cs.lecturer_id = l.id
+LEFT JOIN Lecturer l
+    ON cs.lecturer_id = l.id
 
-WHERE cr.status = 'REGISTERED'
-AND GETDATE() BETWEEN sem.start_date AND sem.end_date;
-GO
+WHERE cr.status = 'REGISTERED';

@@ -1,0 +1,213 @@
+.content{
+
+    padding:30px;
+}
+
+.page-header{
+
+    margin-bottom:25px;
+}
+
+.page-header h2{
+
+    color:#1f2937;
+}
+
+.search-card,
+.student-card,
+.history-card{
+
+    background:#fff;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    margin-bottom:25px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.search-card label{
+
+    display:block;
+
+    font-weight:600;
+
+    margin-bottom:12px;
+}
+
+.search-box{
+
+    display:flex;
+
+    gap:15px;
+}
+
+.search-box input{
+
+    flex:1;
+
+    padding:12px 16px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+
+    font-size:15px;
+}
+
+.search-box button{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
+    padding:0 22px;
+
+    cursor:pointer;
+
+    font-weight:600;
+}
+
+.search-box button:hover{
+
+    background:#1d4ed8;
+}
+
+.student-info{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:25px;
+
+    margin-top:20px;
+}
+
+.student-info span{
+
+    display:block;
+
+    color:#6b7280;
+
+    font-size:14px;
+
+    margin-bottom:8px;
+}
+
+.student-info strong{
+
+    font-size:17px;
+
+    color:#111827;
+}
+
+.history-card table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:20px;
+}
+
+.history-card th{
+
+    background:#f3f4f6;
+
+    padding:14px;
+
+    border:1px solid #e5e7eb;
+
+    text-align:center;
+}
+
+.history-card td{
+
+    padding:14px;
+
+    border:1px solid #e5e7eb;
+
+    text-align:center;
+
+    font-size:14px;
+}
+
+.schedule-cell{
+
+    line-height:22px;
+}
+
+.status{
+
+    display:inline-block;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+}
+
+.status.registered{
+
+    background:#dcfce7;
+
+    color:#15803d;
+}
+
+.status.canceled{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+}
+
+.status.transferred{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+}
+.transfer-room{
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    /* font-weight:600; */
+}
+
+.transfer-arrow{
+
+    color:#000000;
+    font-size:18px;
+}
+
+.empty{
+
+    text-align:center;
+
+    padding:30px;
+
+    color:#6b7280;
+}
+.detail-cell{
+
+    text-align:left;
+
+    line-height:22px;
+
+    color:#374151;
+
+    font-size:14px;
+}
