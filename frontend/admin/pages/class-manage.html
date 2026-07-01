@@ -169,6 +169,32 @@
         </div>
     </div>
 
+<!-- DEMO LOI NON repeatable Read -->
+    <div class="modal" id="demo-modal">
+        <div class="modal-content" style="width: 550px;">
+            <div class="modal-header">
+                <h2>Demo Lỗi Non-repeatable Read</h2>
+                <div class="close-btn" onclick="closeModal('demo-modal')"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="margin-bottom: 20px; color: #4B5563; line-height: 1.5;">
+                    Nhấn <strong>Bắt đầu đọc dữ liệu</strong>. Hệ thống (Transaction 1) sẽ chạy và chờ 10 giây. <br>
+                    Trong lúc đó, hãy mở 1 tab khác hoặc nhấn nút <strong>Mô phỏng 3 SV đăng ký</strong> để tạo Transaction 2 cập nhật sĩ số!
+                </p>
+                <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                    <button class="btn-primary" onclick="startAdminRead()" style="background-color: #3B82F6; border: none;">
+                        <i class="fa-solid fa-rotate"></i> 1. Bắt đầu đọc (Admin)
+                    </button>
+                    <button class="btn-primary" onclick="simulateStudentRegistration()" style="background-color: #10B981; border: none;">
+                        <i class="fa-solid fa-user-plus"></i> 2. Mô phỏng 3 SV đăng ký
+                    </button>
+                </div>
+                
+                <div id="demo-result" style="min-height: 100px; font-size: 15px; border-radius: 8px; padding: 15px;">
+                    </div>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/main.js" data-page="class"></script>
     <script src="../js/class-manage.js"></script>

@@ -134,7 +134,7 @@ function renderClasses(classes) {
             statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
         }
 
-
+        // Lưu ý: demo o dong 150
         tr.innerHTML = `
             <td><strong>${c.id}</strong></td>
             <td>${c.course_name || 'HP' + c.course_id}</td>
@@ -146,6 +146,9 @@ function renderClasses(classes) {
             <td>${statusBadge}</td>
             <td>
                 <div class="action-icons">
+                    
+                    <a href="#" onclick="openDemoModal(${c.id})" class="action-btn" style="color: #8B5CF6;" title="Demo Lỗi Concurrency"><i class="fa-solid fa-bug"></i></a>
+
                     <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
                     <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
                 </div>
@@ -310,3 +313,78 @@ window.onclick = function(event) {
     }
 }
 
+
+// ==========================================
+// XỬ LÝ DEMO NON-REPEATABLE READ
+// ==========================================
+let currentDemoSectionId = null;
+
+function openDemoModal(id) {
+    currentDemoSectionId = id;
+    const resultDiv = document.getElementById("demo-result");
+    resultDiv.innerHTML = "";
+    resultDiv.style.background = "transparent";
+    openModal('demo-modal');
+}
+
+async function startAdminRead() {
+    if (!currentDemoSectionId) return;
+    
+    const resultDiv = document.getElementById("demo-result");
+    resultDiv.style.background = "#EFF6FF"; // Màu nền xanh nhạt báo hiệu đang chạy
+    resultDiv.innerHTML = `
+        <i class="fa-solid fa-spinner fa-spin" style="color: #3B82F6; font-size: 24px;"></i>
+        <p style="color: #1E3A8A; margin-top: 10px; font-weight: bold;">
+            Đang đọc dữ liệu lần 1 (Transaction 1 đang giữ trạng thái Sleep 10s)...
+        </p>
+        <p style="color: #1E3A8A; font-size: 13px;">Nhanh tay bấm nút số 2 hoặc dùng tab khác để cập nhật dữ liệu!</p>
+    `;
+
+    try {
+        // Lưu ý: Route demo không có prefix /admin trong code FastAPI của bạn
+        const response = await fetch(`http://127.0.0.1:8000/demo/non-repeatable-read/admin/${currentDemoSectionId}`);
+        if (!response.ok) throw new Error("Lỗi khi gọi API Đọc dữ liệu");
+        
+        const data = await response.json();
+        
+        // Kiểm tra lỗi hay an toàn để đổi màu
+        const isError = data.first_read !== data.second_read;
+        const bgColor = isError ? "#FEF2F2" : "#F0FDF4"; // Đỏ nhạt (Lỗi) hoặc Xanh nhạt (An toàn)
+        const textColor = isError ? "#DC2626" : "#16A34A";
+
+        resultDiv.style.background = bgColor;
+        resultDiv.innerHTML = `
+            <div style="text-align: left; padding: 0 20px;">
+                <p><strong>Lần đọc 1:</strong> <span style="font-size: 18px;">${data.first_read}</span> sinh viên</p>
+                <p><strong>Lần đọc 2:</strong> <span style="font-size: 18px;">${data.second_read}</span> sinh viên</p>
+                <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #E5E7EB; color: ${textColor}; font-weight: bold; text-align: center;">
+                    <i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-check-circle'}"></i> 
+                    ${data.status_message}
+                </div>
+            </div>
+        `;
+        
+        // Refresh lại danh sách lớp học phần nền dưới
+        fetchClasses();
+    } catch (error) {
+        resultDiv.style.background = "#FEF2F2";
+        resultDiv.innerHTML = `<p style="color: #DC2626;"><strong>Lỗi:</strong> ${error.message}</p>`;
+    }
+}
+
+async function simulateStudentRegistration() {
+    if (!currentDemoSectionId) return;
+    
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/demo/non-repeatable-read/student/${currentDemoSectionId}?add_count=3`, {
+            method: 'POST'
+        });
+        
+        if (!response.ok) throw new Error("Lỗi khi mô phỏng sinh viên đăng ký");
+        
+        const result = await response.json();
+        alert(`Giao dịch sinh viên hoàn tất: ${result.message}`);
+    } catch (error) {
+        alert("Lỗi Giao dịch 2: " + error.message);
+    }
+}
