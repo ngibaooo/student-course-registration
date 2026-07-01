@@ -3,6 +3,8 @@ let currentDeleteId = null;
 let allClasses = [];
 
 
+
+
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchDropdowns();
     await fetchClasses();
@@ -12,6 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         searchInput.addEventListener("input", (e) => filterClasses(e.target.value.trim()));
     }
 });
+
+
 
 
 async function fetchDropdowns() {
@@ -64,9 +68,13 @@ async function fetchDropdowns() {
 }
 
 
+
+
 async function fetchClasses() {
     const tableBody = document.getElementById("classTableBody");
     if (!tableBody) return;
+
+
 
 
     try {
@@ -76,7 +84,11 @@ async function fetchClasses() {
         });
 
 
+
+
         if (!response.ok) throw new Error("Không thể tải danh sách lớp học phần");
+
+
 
 
         const result = await response.json();
@@ -89,6 +101,8 @@ async function fetchClasses() {
         }
 
 
+
+
         allClasses = classes;
         renderClasses(allClasses);
     } catch (e) {
@@ -96,6 +110,8 @@ async function fetchClasses() {
         tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${e.message}</td></tr>`;
     }
 }
+
+
 
 
 function filterClasses(keyword) {
@@ -114,9 +130,13 @@ function filterClasses(keyword) {
 }
 
 
+
+
 function renderClasses(classes) {
     const tableBody = document.getElementById("classTableBody");
     tableBody.innerHTML = "";
+
+
 
 
     if (!Array.isArray(classes) || classes.length === 0) {
@@ -125,14 +145,20 @@ function renderClasses(classes) {
     }
 
 
+
+
     classes.forEach(c => {
         const tr = document.createElement("tr");
+
+
 
 
         let statusBadge = `<span class="badge success">Đang mở</span>`;
         if (c.status && c.status !== 'ACTIVE') {
             statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
         }
+
+
 
 
         tr.innerHTML = `
@@ -147,13 +173,18 @@ function renderClasses(classes) {
             <td>
                 <div class="action-icons">
                     <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                    <a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>
+                    ${c.status === 'INACTIVE'
+                        ? `<a href="#" onclick="executeEnable(${c.id})" class="action-btn" style="background:#10b981; color:white;"><i class="fa-solid fa-unlock"></i></a>`
+                        : `<a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>`
+                    }
                 </div>
             </td>
         `;
         tableBody.appendChild(tr);
     });
 }
+
+
 
 
 function openAddModal() {
@@ -170,9 +201,13 @@ function openAddModal() {
 }
 
 
+
+
 function openEditModal(id) {
     const cls = allClasses.find(c => c.id === id);
     if (!cls) return;
+
+
 
 
     currentEditId = id;
@@ -189,6 +224,8 @@ function openEditModal(id) {
 }
 
 
+
+
 async function saveClass() {
     const courseId = document.getElementById("modal_class_course").value;
     const lecturerId = document.getElementById("modal_class_teacher").value;
@@ -200,10 +237,14 @@ async function saveClass() {
     const endPeriod = document.getElementById("modal_class_end").value;
 
 
+
+
     if (!courseId || !lecturerId || !semesterId || !classroom || !scheduleDay || !maxStudents || !startPeriod || !endPeriod) {
         alert("Vui lòng điền đầy đủ thông tin!");
         return;
     }
+
+
 
 
     const payload = {
@@ -218,6 +259,8 @@ async function saveClass() {
     };
 
 
+
+
     try {
         const token = localStorage.getItem("access_token");
        
@@ -230,6 +273,8 @@ async function saveClass() {
         }
 
 
+
+
         const response = await fetch(url, {
             method: method,
             headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
@@ -237,10 +282,14 @@ async function saveClass() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail ? JSON.stringify(result.detail) : "Lỗi lưu lớp học phần");
         }
+
+
 
 
         alert("Lưu lớp học phần thành công!");
@@ -252,14 +301,20 @@ async function saveClass() {
 }
 
 
+
+
 function confirmDelete(id) {
     currentDeleteId = id;
     openModal('delete-modal');
 }
 
 
+
+
 async function executeDelete() {
     if (!currentDeleteId) return;
+
+
 
 
     try {
@@ -273,10 +328,14 @@ async function executeDelete() {
         });
 
 
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Yêu cầu khóa bị từ chối từ Server");
         }
+
+
 
 
         alert("Đã khóa lớp học phần thành công!");
@@ -285,10 +344,43 @@ async function executeDelete() {
         fetchClasses();
 
 
+
+
     } catch (error) {
         alert("Lỗi thực hiện khóa: " + error.message);
     }
 }
+
+
+
+
+async function executeEnable(id) {
+    if (!confirm("Bạn có chắc muốn mở khóa lớp học phần này?")) return;
+    try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/course-sections/${id}/enable`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.detail || "Yêu cầu mở khóa bị từ chối từ Server");
+        }
+
+
+        alert("Đã mở khóa lớp học phần thành công!");
+        fetchClasses();
+    } catch (error) {
+        alert("Lỗi mở khóa: " + error.message);
+    }
+}
+
+
 
 
 // Modal Toggle Functions
@@ -298,10 +390,14 @@ function openModal(modalId) {
 }
 
 
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.remove('show');
 }
+
+
 
 
 window.onclick = function(event) {
@@ -309,4 +405,8 @@ window.onclick = function(event) {
         event.target.classList.remove('show');
     }
 }
+
+
+
+
 
