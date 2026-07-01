@@ -2,6 +2,41 @@ const API_URL = "http://127.0.0.1:8000/admin";
 const currentScriptTag = document.currentScript;
 const currentPage = currentScriptTag ? currentScriptTag.getAttribute('data-page') : 'dashboard';
 
+const originalFetch = window.fetch.bind(window);
+window.fetch = async function(resource, options = {}) {
+    const url = resource instanceof Request ? resource.url : String(resource);
+    const isApiRequest = url.startsWith('http://127.0.0.1:8000') || url.startsWith('http://localhost:8000');
+
+    if (!isApiRequest) {
+        return originalFetch(resource, options);
+    }
+
+    const token = localStorage.getItem("access_token");
+    const headers = new Headers(options.headers || {});
+
+    if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    const mergedOptions = {
+        ...options,
+        headers
+    };
+
+    const response = await originalFetch(resource, mergedOptions);
+
+    if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_role");
+        localStorage.removeItem("full_name");
+        localStorage.removeItem("username");
+        window.location.href = "../../student/pages/login.html";
+        throw new Error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+    }
+
+    return response;
+};
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. Tự động tải Sidebar (Đi từ admin/pages ra components của admin)
@@ -53,6 +88,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+
+
+
     // 2. Tự động tải Topbar + Đổ dữ liệu thật + Đồng bộ tiêu đề trang
     const topbarContainer = document.getElementById('topbar-container');
     if (topbarContainer) {
@@ -64,9 +103,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+
+
+
                 // --- TỰ ĐỘNG ĐỔ THÔNG TIN ADMIN LÊN TOPBAR ---
                 const fullName = localStorage.getItem("full_name") || "Quản trị viên";
                 const userId = localStorage.getItem("user_id") || "ADMIN";
+
+
+
+
 
 
 
@@ -78,12 +125,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
+
+
+
                 if (nameEl) nameEl.textContent = fullName;
                 if (idEl) idEl.textContent = userId;
                 if (avatarEl && fullName) {
                     // Lấy chữ cái đầu tiên của tên làm Avatar đại diện
                     avatarEl.textContent = fullName.charAt(0).toUpperCase();
                 }
+
+
+
+
 
 
 
@@ -106,7 +161,23 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => console.error("Lỗi tải Topbar:", err));
     }
+
+
+    // Global listener for logout button
+    document.addEventListener("click", (e) => {
+        const logoutBtn = e.target.closest("#logoutBtn");
+        if (logoutBtn) {
+            e.preventDefault();
+            if (typeof window.logout === "function") {
+                window.logout();
+            }
+        }
+    });
 });
+
+
+
+
 
 
 
@@ -126,6 +197,10 @@ function openModal(modalId) {
 
 
 
+
+
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -140,26 +215,49 @@ function closeModal(modalId) {
 
 
 
-// 4. HÀM XỬ LÝ ĐĂNG XUẤT SAU KHI ĐÃ BẤM XÁC NHẬN TRÊN POPUP
-async function executeLogout() {
-    // Xóa sạch thông tin phiên làm việc cũ lưu trên trình duyệt
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_role");
-    localStorage.removeItem("full_name");
-    localStorage.removeItem("user_id");
 
 
 
 
-    // Đóng popup trước khi chuyển trang
-    closeModal('logout-confirm-modal');
+// 4. HÀM XỬ LÝ ĐĂNG XUẤT
+window.logout = async function() {
+    const confirmLogout = confirm("Bạn có chắc muốn đăng xuất?");
+    if (!confirmLogout) return;
 
 
+    try {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            await fetch("http://127.0.0.1:8000/api/auth/logout", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        }
+    } catch(error) {
+        console.error("Logout API error:", error);
+    } finally {
+        // Xóa toàn bộ dữ liệu localStorage
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_role");
+        localStorage.removeItem("full_name");
+        localStorage.removeItem("username");
 
 
-    // Điều hướng đưa tài khoản quay trở lại trang đăng nhập hệ thống
-    window.location.href = "../../student/pages/login.html";
+        // Quay về login
+        window.location.href = "../../student/pages/login.html";
+    }
 }
+
+
+
+
+
+
+
+
 
 
 

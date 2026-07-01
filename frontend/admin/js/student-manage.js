@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    fetchDepartments();
     fetchStudents();
-
-
 
 
     const searchInput = document.getElementById("searchStudentInput");
@@ -9,6 +8,34 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.addEventListener("input", (e) => fetchStudents(e.target.value.trim()));
     }
 });
+
+
+let departments = [];
+
+
+async function fetchDepartments() {
+    try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/students/departments/list`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            departments = await response.json();
+            const select = document.getElementById("modal_department_id");
+            if (select) {
+                select.innerHTML = departments.map(d => `<option value="${d.id}">${d.department_name}</option>`).join('');
+            }
+        }
+    } catch (e) {
+        console.error("Lỗi fetch departments", e);
+    }
+}
+
+
+
+
 
 
 
@@ -20,9 +47,17 @@ let allStudents = [];
 
 
 
+
+
+
+
 async function fetchStudents(keyword = "") {
     const tableBody = document.getElementById("studentTableBody");
     if (!tableBody) return;
+
+
+
+
 
 
 
@@ -31,6 +66,10 @@ async function fetchStudents(keyword = "") {
         const token = localStorage.getItem("access_token");
         let url = `${API_URL}/students`;
         if (keyword) url = `${API_URL}/students/search?keyword=${encodeURIComponent(keyword)}`;
+
+
+
+
 
 
 
@@ -46,7 +85,15 @@ async function fetchStudents(keyword = "") {
 
 
 
+
+
+
+
         if (!response.ok) throw new Error("Server trả về mã lỗi: " + response.status);
+
+
+
+
 
 
 
@@ -65,7 +112,15 @@ async function fetchStudents(keyword = "") {
 
 
 
+
+
+
+
         tableBody.innerHTML = "";
+
+
+
+
 
 
 
@@ -78,7 +133,15 @@ async function fetchStudents(keyword = "") {
 
 
 
+
+
+
+
         allStudents = students;
+
+
+
+
 
 
 
@@ -95,10 +158,18 @@ async function fetchStudents(keyword = "") {
 
 
 
+
+
+
+
             let displayGender = '-';
             if (sv.gender === 'MALE') displayGender = 'Nam';
             else if (sv.gender === 'FEMALE') displayGender = 'Nữ';
             else if (sv.gender === 'OTHER') displayGender = 'Khác';
+
+
+
+
 
 
 
@@ -114,7 +185,10 @@ async function fetchStudents(keyword = "") {
                     <div class="action-icons">
                         <a href="#" onclick="openInfoModal('${sv.id}')" class="action-btn edit" style="background:#3b82f6; color:white;"><i class="fa-solid fa-eye"></i></a>
                         <a href="#" onclick="openEditModal('${sv.id}')" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                        <a href="#" onclick="confirmDelete('${sv.id}')" class="action-btn delete"><i class="fa-solid fa-trash"></i></a>
+                        ${sv.status === 'LOCKED'
+                            ? `<a href="#" onclick="executeUnlock('${sv.id}')" class="action-btn" style="background:#10b981; color:white;"><i class="fa-solid fa-unlock"></i></a>`
+                            : `<a href="#" onclick="confirmDelete('${sv.id}')" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>`
+                        }
                     </div>
                 </td>
             `;
@@ -124,11 +198,19 @@ async function fetchStudents(keyword = "") {
 
 
 
+
+
+
+
     } catch (error) {
         console.error("Lỗi Fetch:", error);
         tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#DC2626; padding:40px;">Lỗi kết nối dữ liệu: ${error.message}</td></tr>`;
     }
 }
+
+
+
+
 
 
 
@@ -146,6 +228,10 @@ async function saveStudent() {
 
 
 
+
+
+
+
     if (!full_name || !email || !department_id) {
         alert("Vui lòng điền các thông tin bắt buộc: Họ tên, Email, Khoa!");
         return;
@@ -155,6 +241,10 @@ async function saveStudent() {
         alert("Vui lòng điền mật khẩu cho sinh viên mới!");
         return;
     }
+
+
+
+
 
 
 
@@ -183,6 +273,10 @@ async function saveStudent() {
 
 
 
+
+
+
+
     try {
         const token = localStorage.getItem("access_token");
         const response = await fetch(url, {
@@ -197,7 +291,15 @@ async function saveStudent() {
 
 
 
+
+
+
+
         const result = await response.json();
+
+
+
+
 
 
 
@@ -206,6 +308,10 @@ async function saveStudent() {
             const errorMsg = result.detail ? (typeof result.detail === 'object' ? JSON.stringify(result.detail) : result.detail) : "Lỗi không xác định từ Backend";
             throw new Error(errorMsg);
         }
+
+
+
+
 
 
 
@@ -224,7 +330,15 @@ async function saveStudent() {
 
 
 
+
+
+
+
         fetchStudents();
+
+
+
+
 
 
 
@@ -238,6 +352,10 @@ async function saveStudent() {
 
 
 
+
+
+
+
 function confirmDelete(id) {
     currentDeleteId = id;
     openModal('delete-modal');
@@ -246,8 +364,16 @@ function confirmDelete(id) {
 
 
 
+
+
+
+
 async function executeDelete() {
     if (!currentDeleteId) return;
+
+
+
+
 
 
 
@@ -265,10 +391,18 @@ async function executeDelete() {
 
 
 
+
+
+
+
         if (!response.ok) {
             const result = await response.json();
             throw new Error(result.detail || "Yêu cầu khóa bị từ chối từ Server");
         }
+
+
+
+
 
 
 
@@ -281,11 +415,47 @@ async function executeDelete() {
 
 
 
+
+
+
+
     } catch (error) {
         alert("Lỗi thực hiện xóa: " + error.message);
         console.error("Lỗi Delete:", error);
     }
 }
+
+
+async function executeUnlock(id) {
+    if (!confirm("Bạn có chắc muốn mở khóa sinh viên này?")) return;
+    try {
+        const token = localStorage.getItem("access_token");
+        const response = await fetch(`${API_URL}/students/${id}/unlock`, {
+            method: "PATCH",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.detail || "Yêu cầu mở khóa bị từ chối từ Server");
+        }
+
+
+        alert("Đã mở khóa sinh viên thành công!");
+        fetchStudents();
+    } catch (error) {
+        alert("Lỗi mở khóa: " + error.message);
+        console.error("Lỗi Unlock:", error);
+    }
+}
+
+
+
+
 
 
 
@@ -316,9 +486,15 @@ function openEditModal(id) {
 
 
 
+
+
+
+
 function openInfoModal(id) {
     const sv = allStudents.find(s => s.id == id);
     if (!sv) return;
+
+
 
 
     let displayGender = '-';
@@ -327,9 +503,13 @@ function openInfoModal(id) {
     else if (sv.gender === 'OTHER') displayGender = 'Khác';
 
 
+
+
     let displayStatus = 'Đang hoạt động';
     if (sv.status === 'LOCKED') displayStatus = 'Bị khóa';
     else if (sv.status) displayStatus = sv.status;
+
+
 
 
     document.getElementById("info_id").innerText = sv.id || '-';
@@ -339,8 +519,13 @@ function openInfoModal(id) {
     document.getElementById("info_dob").innerText = sv.date_of_birth || '-';
     document.getElementById("info_phone").innerText = sv.phone || '-';
     document.getElementById("info_address").innerText = sv.address || '-';
-    document.getElementById("info_department").innerText = sv.department_id || '-';
+   
+    const dept = departments.find(d => d.id == sv.department_id);
+    document.getElementById("info_department").innerText = dept ? dept.department_name : (sv.department_name || sv.department_id || '-');
+   
     document.getElementById("info_status").innerText = displayStatus;
+
+
 
 
     openModal('student-info-modal');
@@ -349,25 +534,35 @@ function openInfoModal(id) {
 
 
 
+
+
+
+
+function openCreateModal() {
+    currentEditId = null;
+    document.getElementById("modal_fullname").value = "";
+    document.getElementById("modal_email").value = "";
+    document.getElementById("modal_password").value = "";
+    const pwdGroup = document.getElementById("modal_password").closest('.form-group');
+    if (pwdGroup) pwdGroup.style.display = 'block';
+    document.getElementById("modal_dob").value = "";
+    document.getElementById("modal_phone").value = "";
+    document.getElementById("modal_address").value = "";
+    document.querySelector('#student-modal h2').innerText = "Thêm sinh viên";
+    openModal('student-modal');
+}
+
+
 function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        if (modalId === 'student-modal' && !currentEditId) {
-            // Reset form for create
-            currentEditId = null;
-            document.getElementById("modal_fullname").value = "";
-            document.getElementById("modal_email").value = "";
-            document.getElementById("modal_password").value = "";
-            const pwdGroup = document.getElementById("modal_password").closest('.form-group');
-            if (pwdGroup) pwdGroup.style.display = 'block';
-            document.getElementById("modal_dob").value = "";
-            document.getElementById("modal_phone").value = "";
-            document.getElementById("modal_address").value = "";
-            document.querySelector('#student-modal h2').innerText = "Thêm sinh viên";
-        }
         modal.classList.add('show');
     }
 }
+
+
+
+
 
 
 
@@ -380,12 +575,24 @@ function closeModal(modalId) {
 
 
 
+
+
+
+
 // Close on outside click
 window.onclick = function(event) {
     if (event.target.classList.contains('modal')) {
         event.target.classList.remove('show');
     }
 }
+
+
+
+
+
+
+
+
 
 
 

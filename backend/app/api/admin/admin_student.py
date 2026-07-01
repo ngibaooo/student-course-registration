@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from app.database.connection import get_db
@@ -25,6 +26,19 @@ router = APIRouter(
     tags=["Admin Students"],
     dependencies=[Depends(require_admin)]
 )
+
+@router.get("/departments/list")
+def get_student_departments(db: Session = Depends(get_db)):
+    query = text("""
+        SELECT
+            id,
+            department_name,
+            address,
+            phone
+        FROM Department
+        ORDER BY id
+    """)
+    return db.execute(query).mappings().all()
 
 @router.get("/search")
 def search_student(
