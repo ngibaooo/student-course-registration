@@ -290,7 +290,44 @@ class CourseSectionRepository:
         return db.execute(
             query
         ).mappings().all()
+    @staticmethod
+    def get_students_by_section(
+        db,
+        section_id
+    ):
 
+        query = text("""
+            SELECT
+                s.id,
+                u.full_name,
+                u.email,
+                s.phone,
+                s.date_of_birth,
+                s.gender,
+                d.department_name,
+                cr.registration_date
+
+            FROM CourseRegistration cr
+
+            JOIN Student s
+                ON cr.student_id = s.id
+            JOIN [User] u
+                ON s.user_id = u.id
+            LEFT JOIN Department d
+                ON s.department_id = d.id
+
+            WHERE cr.section_id = :section_id
+            AND cr.status = 'REGISTERED'
+
+            ORDER BY s.id
+        """)
+
+        return db.execute(
+            query,
+            {
+                "section_id": section_id
+            }
+        ).mappings().all()
 
 
     # DEMO Loi Non-repeatable Read

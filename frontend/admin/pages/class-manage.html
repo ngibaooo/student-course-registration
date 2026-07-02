@@ -168,14 +168,67 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="detail-modal">
+
+        <div class="modal-content" style="width:1000px;">
+
+            <div class="modal-header">
+                <h2>Chi tiết lớp học phần</h2>
+
+                <div class="close-btn"
+                    onclick="closeModal('detail-modal')">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </div>
+
+            </div>
+
+            <div id="detailInfo"></div>
+            <div style="margin:20px 0;">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        id="searchStudentInClass"
+                        placeholder="Tìm theo MSSV hoặc tên sinh viên..."
+                    >
+                </div>
+            </div>
+
+            <table class="course-table">
+
+            <br>
+
+            <table class="course-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>SĐT</th>
+                        <th>Khoa</th>
+                        <th>Ngày đăng ký</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentDetailBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 
     <script src="../js/main.js" data-page="class"></script>
     <script src="../js/class-manage.js"></script>
 </body>
 </html>
-
-
-
-
-

@@ -185,7 +185,7 @@ function renderTable(logs) {
             case "TRANSFER":
 
                 description =
-                    `Sinh viên chuyển lớp học phần từ phòng
+                    `Sinh viên được chuyển lớp học phần từ phòng
                     ${log.from_classroom}
                     sang
                     ${log.classroom}.`;

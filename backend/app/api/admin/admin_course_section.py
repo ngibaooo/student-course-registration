@@ -130,6 +130,45 @@ def enable_section(
         db,
         section_id
     )
+@router.get("/{course_id}/courses")
+def get_course_sections_by_course(
+    course_id: int,
+    db: Session = Depends(get_db)
+):
+
+    try:
+
+        return CourseSectionService.get_course_sections_by_course(
+            db,
+            course_id
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
+@router.get("/{section_id}/students")
+def get_students_by_section(
+    section_id: int,
+    db: Session = Depends(get_db)
+):
+
+    try:
+
+        return CourseSectionService.get_students_by_section(
+            db,
+            section_id
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 #DEMO LOI
 @demo_router.get("/demo/non-repeatable-read/admin/{section_id}")
 def demo_admin_read(
@@ -152,22 +191,3 @@ def demo_student_update(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@router.get("/{course_id}/courses")
-def get_course_sections_by_course(
-    course_id: int,
-    db: Session = Depends(get_db)
-):
-
-    try:
-
-        return CourseSectionService.get_course_sections_by_course(
-            db,
-            course_id
-        )
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=400,
-            detail=str(e)
-        )

@@ -213,7 +213,43 @@ class CourseSectionService:
 
             db.rollback()
             raise
+    @staticmethod
+    def get_students_by_section(
+        db,
+        section_id
+    ):
 
+        try:
+
+            db.begin()
+
+            section = CourseSectionRepository.get_by_id(
+                db,
+                section_id
+            )
+
+            if not section:
+                raise Exception("Course section not found")
+
+            students = (
+                CourseSectionRepository
+                .get_students_by_section(
+                    db,
+                    section_id
+                )
+            )
+
+            db.commit()
+
+            return {
+                "section": section,
+                "students": students
+            }
+
+        except Exception:
+
+            db.rollback()
+            raise
 
 #DEMO LOI
     @staticmethod

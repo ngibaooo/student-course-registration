@@ -224,6 +224,7 @@ async function saveStudent() {
     const phone = document.getElementById("modal_phone").value.trim();
     const department_id = document.getElementById("modal_department_id").value;
     const address = document.getElementById("modal_address").value.trim();
+    const enrollment_year = document.getElementById("modal_enrollment_year").value;
 
 
 
@@ -257,7 +258,8 @@ async function saveStudent() {
         gender: gender || null,
         phone: phone || null,
         address: address || null,
-        department_id: parseInt(department_id)
+        department_id: parseInt(department_id),
+        enrollment_year: parseInt(enrollment_year)
     };
    
     let method = "POST";
@@ -478,6 +480,7 @@ function openEditModal(id) {
     document.getElementById("modal_phone").value = sv.phone || '';
     document.getElementById("modal_department_id").value = sv.department_id || 1;
     document.getElementById("modal_address").value = sv.address || '';
+    document.getElementById("modal_enrollment_year").value = sv.enrollment_year || "";
    
     document.querySelector('#student-modal h2').innerText = "Cập nhật sinh viên";
     openModal('student-modal');
@@ -548,6 +551,7 @@ function openCreateModal() {
     document.getElementById("modal_dob").value = "";
     document.getElementById("modal_phone").value = "";
     document.getElementById("modal_address").value = "";
+    document.getElementById("modal_enrollment_year").value = new Date().getFullYear();
     document.querySelector('#student-modal h2').innerText = "Thêm sinh viên";
     openModal('student-modal');
 }
