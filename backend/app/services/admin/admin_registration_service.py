@@ -183,7 +183,11 @@ class RegistrationService:
             db.rollback()
 
             message = str(e.orig) if hasattr(e, "orig") else str(e)
-
+            if "1205" in message or "deadlock" in message.lower():
+                raise HTTPException(
+                    status_code=409,
+                    detail="Đã xảy ra lỗi Deadlock. Vui lòng thực hiện lại thao tác."
+                )
             raise HTTPException(
                 status_code=400,
                 detail=message
