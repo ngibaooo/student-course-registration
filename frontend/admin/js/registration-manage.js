@@ -236,8 +236,8 @@ async function confirmTransfer(fromSectionId) {
             localStorage.getItem("access_token");
 
         const response = await fetch(
-            // `${API_BASE}/admin/registrations/transfer`,
-            `${API_BASE}/admin/registrations/transfer/demo-deadlock`, //demo DEADLOCK
+            `${API_BASE}/admin/registrations/transfer`,
+            // `${API_BASE}/admin/registrations/transfer/demo-deadlock`, //demo DEADLOCK
             {
                 method: "PUT",
 
