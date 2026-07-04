@@ -21,26 +21,28 @@ class RegistrationService:
                 detail="Không tìm thấy sinh viên"
             )
         try:
-
             RegistrationRepository.register_course_section_phantom(
                 db,
                 student_id,
                 section_id
-            )
-
+    )
             db.commit()
-
             return {
                 "message": "Course registration successful"
-            }
+    }
         except Exception as e:
 
             db.rollback()
 
+            message = "Đăng ký thất bại"
+
+            if "Lớp đã đầy" in str(e):
+                message = "Lớp học phần đã đầy"
+
             raise HTTPException(
                 status_code=400,
-                detail=str(e)
-            )
+                detail=message
+    )
     @staticmethod
     def cancel_course_section(
         db,
