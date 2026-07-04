@@ -24,7 +24,7 @@ BEGIN
         -- Giữ lock đến khi COMMIT
         SELECT
             @Remaining = maximum_students - registered_students
-        FROM CourseSection 
+        FROM CourseSection WITH (UPDLOCK)
         WHERE id = @SectionId;
 
         PRINT 'Remaining = ' + CAST(@Remaining AS VARCHAR);
