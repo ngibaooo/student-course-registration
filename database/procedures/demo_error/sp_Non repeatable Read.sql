@@ -7,7 +7,11 @@ CREATE PROCEDURE sp_demo_non_repeatable_read_admin
 AS
 BEGIN
     -- Mức cô lập READ COMMITTED (mặc định) cho phép xảy ra Non-repeatable Read
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+    --SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    
+    --Fix LOI
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
     
     DECLARE @Read1 INT;
     DECLARE @Read2 INT;
