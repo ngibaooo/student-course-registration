@@ -22,7 +22,7 @@ class RegistrationService:
             )
         try:
 
-            RegistrationRepository.register_course_section(
+            RegistrationRepository.register_course_section_phantom(
                 db,
                 student_id,
                 section_id
@@ -106,6 +106,42 @@ class RegistrationService:
             return {
                 "message": "Course registration successful"
             }
+        except Exception as e:
+
+            db.rollback()
+
+            raise HTTPException(
+                status_code=400,
+                detail=str(e)
+            )
+    @staticmethod
+    def register_course_section_phantom(
+        db,
+        user_id,
+        section_id
+    ):
+        student_id = get_student_id_by_user_id(user_id)
+
+        if student_id is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Không tìm thấy sinh viên"
+            )
+
+        try:
+
+            RegistrationRepository.register_course_section_phantom(
+                db,
+                student_id,
+                section_id
+            )
+
+            db.commit()
+
+            return {
+                "message": "Course registration successful"
+            }
+
         except Exception as e:
 
             db.rollback()
