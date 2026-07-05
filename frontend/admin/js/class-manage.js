@@ -188,9 +188,7 @@ function renderClasses(classes) {
             statusBadge = `<span class="badge warning">${c.status === 'INACTIVE' ? 'Đã khóa' : c.status}</span>`;
         }
 
-
-
-
+        // Lưu ý: demo o dong 150
         tr.innerHTML = `
             <td><strong>${c.id}</strong></td>
             <td>${c.course_name || 'HP' + c.course_id}</td>
