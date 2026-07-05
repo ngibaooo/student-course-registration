@@ -37,10 +37,15 @@ class RegistrationService:
 
             db.rollback()
 
+            message = "Đăng ký thất bại"
+
+            if "Lớp đã đầy" in str(e):
+                message = "Lớp học phần đã đầy"
+
             raise HTTPException(
                 status_code=400,
-                detail=str(e)
-            )
+                detail=message
+    )
     @staticmethod
     def cancel_course_section(
         db,
