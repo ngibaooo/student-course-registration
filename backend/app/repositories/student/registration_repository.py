@@ -63,23 +63,3 @@ class RegistrationRepository:
                 "section_id": section_id
             }
         )
-        
-    @staticmethod
-    def register_course_section_phantom(
-        db,
-        student_id: int,
-        section_id: int
-    ):
-        query = text("""
-            EXEC sp_register_phantom_read
-                @StudentId = :student_id,
-                @SectionId = :section_id
-        """)
-
-        db.execute(
-            query,
-            {
-                "student_id": student_id,
-                "section_id": section_id
-            }
-        )

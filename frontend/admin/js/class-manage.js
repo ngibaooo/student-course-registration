@@ -201,6 +201,11 @@ function renderClasses(classes) {
             <td>
                 <div class="action-icons">
                     <a href="#" onclick="openDemoModal(${c.id})" class="action-btn" style="color: #8B5CF6;" title="Demo Lỗi Concurrency"><i class="fa-solid fa-bug"></i></a>
+                    <a href="#"
+                    onclick="openDetailModal(${c.id})"
+                    class="action-btn view">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
 
                     <a href="#"
                     onclick="openEditModal(${c.id})"
