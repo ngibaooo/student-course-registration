@@ -54,3 +54,18 @@ def register_course_demo(
         user_id,
         request.section_id
     )
+# DEMO LỖI
+## Phantom Read
+@router.post("/demo-phantom")
+def register_course_demo_phantom(
+    request: RegisterCourseSectionRequest,
+    current_user: dict = Depends(require_student),
+    db: Session = Depends(get_db)
+):
+    user_id = current_user["user_id"]
+
+    return RegistrationService.register_course_section_phantom(
+        db,
+        user_id,
+        request.section_id
+    )

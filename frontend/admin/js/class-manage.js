@@ -2,6 +2,8 @@ let currentEditId = null;
 let currentDeleteId = null;
 let allClasses = [];
 
+let currentStudents = [];
+
 
 
 
@@ -13,6 +15,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (searchInput) {
         searchInput.addEventListener("input", (e) => filterClasses(e.target.value.trim()));
     }
+    const searchStudent = document.getElementById("searchStudentInClass");
+
+        if(searchStudent){
+
+            searchStudent.addEventListener("input", function(){
+
+                const keyword = this.value.trim().toLowerCase();
+
+                if(keyword===""){
+
+                    renderStudentTable(currentStudents);
+                    return;
+                }
+
+                const filtered = currentStudents.filter(s=>{
+
+                    return (
+                        s.id.toString().includes(keyword) ||
+                        s.full_name.toLowerCase().includes(keyword)
+                    );
+
+                });
+
+                renderStudentTable(filtered);
+
+            });
+
+        }
 });
 
 
@@ -170,14 +200,31 @@ function renderClasses(classes) {
             <td>${statusBadge}</td>
             <td>
                 <div class="action-icons">
-                    
                     <a href="#" onclick="openDemoModal(${c.id})" class="action-btn" style="color: #8B5CF6;" title="Demo Lỗi Concurrency"><i class="fa-solid fa-bug"></i></a>
 
-                    <a href="#" onclick="openEditModal(${c.id})" class="action-btn edit"><i class="fa-solid fa-pen"></i></a>
-                    ${c.status === 'INACTIVE'
-                        ? `<a href="#" onclick="executeEnable(${c.id})" class="action-btn" style="background:#10b981; color:white;"><i class="fa-solid fa-unlock"></i></a>`
-                        : `<a href="#" onclick="confirmDelete(${c.id})" class="action-btn delete"><i class="fa-solid fa-lock"></i></a>`
+                    <a href="#"
+                    onclick="openEditModal(${c.id})"
+                    class="action-btn edit">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    ${
+                        c.status === 'INACTIVE'
+                        ? `
+                        <a href="#"
+                        onclick="executeEnable(${c.id})"
+                        class="action-btn"
+                        style="background:#10b981;color:white;">
+                            <i class="fa-solid fa-unlock"></i>
+                        </a>`
+                        : `
+                        <a href="#"
+                        onclick="confirmDelete(${c.id})"
+                        class="action-btn delete">
+                            <i class="fa-solid fa-lock"></i>
+                        </a>`
                     }
+
                 </div>
             </td>
         `;
@@ -406,8 +453,173 @@ window.onclick = function(event) {
         event.target.classList.remove('show');
     }
 }
+async function openDetailModal(sectionId) {
 
+    try {
 
+        const token = localStorage.getItem("access_token");
+
+        const response = await fetch(
+            `${API_URL}/course-sections/${sectionId}/students`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+
+            throw new Error("Không lấy được dữ liệu");
+
+        }
+
+        // const data = await response.json();
+
+        // renderDetail(data);
+
+        // openModal("detail-modal");
+        const data = await response.json();
+
+        currentStudents = data.students;
+
+        renderDetail(data);
+
+        document.getElementById("searchStudentInClass").value = "";
+
+        openModal("detail-modal");
+
+    }
+    catch(e){
+
+        alert(e.message);
+
+    }
+
+}
+function renderDetail(data){
+
+    const section = data.section;
+    const students = data.students;
+
+    document.getElementById("detailInfo").innerHTML = `
+        <div class="detail-card">
+
+            <p><strong>Môn học:</strong> ${section.course_name}</p>
+
+            <p><strong>Giảng viên:</strong> ${section.lecturer_name}</p>
+
+            <p><strong>Học kỳ:</strong> ${section.semester_name}</p>
+
+            <p><strong>Phòng:</strong> ${section.classroom}</p>
+
+            <p><strong>Lịch:</strong>
+                Thứ ${section.schedule_day}
+                (${section.start_period}-${section.end_period})
+            </p>
+
+            <p><strong>Sĩ số:</strong>
+                ${section.registered_students}/${section.maximum_students}
+            </p>
+
+        </div>
+    `;
+
+    // const body = document.getElementById("studentDetailBody");
+
+    // body.innerHTML = "";
+
+    // if(students.length===0){
+
+    //     body.innerHTML=`
+    //         <tr>
+
+    //             <td colspan="6"
+    //                 style="text-align:center">
+
+    //                 Chưa có sinh viên đăng ký
+
+    //             </td>
+
+    //         </tr>
+    //     `;
+
+    //     return;
+
+    // }
+
+    // students.forEach(s=>{
+
+    //     body.innerHTML += `
+    //         <tr>
+
+    //             <td>${s.id}</td>
+
+    //             <td>${s.full_name}</td>
+
+    //             <td>${s.email}</td>
+
+    //             <td>${s.phone}</td>
+
+    //             <td>${s.department_name ?? ""}</td>
+
+    //             <td>${formatDate(s.registration_date)}</td>
+
+    //         </tr>
+    //     `;
+
+    // });
+    renderStudentTable(students);
+}
+function formatDate(date){
+
+    if(!date) return "";
+
+    return new Date(date).toLocaleString("vi-VN");
+
+}
+function renderStudentTable(students){
+
+    const body = document.getElementById("studentDetailBody");
+
+    body.innerHTML = "";
+
+    if(students.length===0){
+
+        body.innerHTML=`
+            <tr>
+                <td colspan="6" style="text-align:center">
+                    Không tìm thấy sinh viên
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    students.forEach(s=>{
+
+        body.innerHTML += `
+            <tr>
+
+                <td>${s.id}</td>
+
+                <td>${s.full_name}</td>
+
+                <td>${s.email}</td>
+
+                <td>${s.phone}</td>
+
+                <td>${s.department_name ?? ""}</td>
+
+                <td>${formatDate(s.registration_date)}</td>
+
+            </tr>
+        `;
+
+    });
+
+}
 // ==========================================
 // XỬ LÝ DEMO NON-REPEATABLE READ
 // ==========================================

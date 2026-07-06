@@ -383,3 +383,28 @@
     background: #B91C1C;
     box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
 }
+.detail-card{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:10px;
+
+    background:#F9FAFB;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
+
+}
+
+.detail-card p{
+
+    margin:0;
+
+    font-size:14px;
+
+}

@@ -97,7 +97,7 @@ def create_student(
 
         raise HTTPException(
             status_code=400,
-            detail="Email đã tồn tại"
+            detail=str(e)
         )
 
 @router.put("/{id}")

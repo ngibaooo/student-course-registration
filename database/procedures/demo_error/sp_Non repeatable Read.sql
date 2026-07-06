@@ -10,10 +10,10 @@ AS
 BEGIN
     -- Mức cô lập READ COMMITTED (mặc định) cho phép xảy ra Non-repeatable Read
 
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    --SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     
     --Fix LOI
-    --SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
     
     DECLARE @Read1 INT;
     DECLARE @Read2 INT;
@@ -25,7 +25,7 @@ BEGIN
         WHERE id = @section_id;
 
         -- Dừng 10 giây để chờ giao dịch khác (Sinh viên đăng ký) nhảy vào cập nhật
-        WAITFOR DELAY '00:00:10';
+        WAITFOR DELAY '00:00:15';
 
         -- Lần đọc 2: Đọc lại đúng dữ liệu đó trong cùng 1 Transaction
         SELECT @Read2 = registered_students 

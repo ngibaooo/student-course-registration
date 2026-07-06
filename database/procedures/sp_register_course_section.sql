@@ -1,3 +1,6 @@
+DROP PROCEDURE sp_register_course_section
+GO
+
 CREATE PROCEDURE sp_register_course_section
 (
     @StudentId INT,
@@ -7,15 +10,15 @@ AS
 BEGIN
 
     BEGIN TRANSACTION;
-
+    -- SELECT registered_students
+    -- FROM CourseSection WITH (UPDLOCK, HOLDLOCK)
+    -- WHERE id = @SectionId;
+    DECLARE @CurrentStudents INT;
+    SELECT @CurrentStudents = registered_students
+    FROM CourseSection WITH (UPDLOCK, HOLDLOCK)
+    WHERE id = @SectionId;
+    WAITFOR DELAY '00:00:10';
     -- Validate 1: Sinh viên phải tồn tại
-    -- IF NOT EXISTS
-    -- (
-    --     SELECT 1
-    --     FROM Student
-    --     WHERE id = @StudentId
-    -- )
-    -- Update: dùng fn_is_valid_student
     IF dbo.fn_is_valid_student(@StudentId) = 0
     BEGIN
         ROLLBACK TRANSACTION;
@@ -218,6 +221,7 @@ BEGIN
             1;
     END
 
+   
     
     -- Đăng kí thành công
     -- Check nếu đã có CourseRegistration đó rồi nhưng bị hủy thì chỉ cần update lại status CANCELED -> REGISTERED 
@@ -260,11 +264,10 @@ BEGIN
         );
 
     END
-
-    
     -- Cập nhật sĩ số lớp
+
     UPDATE CourseSection
-    SET registered_students = registered_students + 1
+    SET registered_students = @CurrentStudents + 1
     WHERE id = @SectionId;
 
     COMMIT TRANSACTION;

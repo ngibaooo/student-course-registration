@@ -1,3 +1,6 @@
+DROP PROCEDURE sp_transfer_course_section
+GO
+
 CREATE PROCEDURE sp_transfer_course_section
 (
     @StudentId INT,
@@ -10,7 +13,29 @@ BEGIN
     BEGIN TRY
 
         BEGIN TRANSACTION;
+        DECLARE @FirstSectionId INT;
+        DECLARE @SecondSectionId INT;
 
+        IF @FromSectionId < @ToSectionId
+        BEGIN
+            SET @FirstSectionId = @FromSectionId;
+            SET @SecondSectionId = @ToSectionId;
+        END
+        ELSE
+        BEGIN
+            SET @FirstSectionId = @ToSectionId;
+            SET @SecondSectionId = @FromSectionId;
+        END;
+
+        SELECT id
+        FROM CourseSection WITH (UPDLOCK, HOLDLOCK)
+        WHERE id = @FirstSectionId;
+
+        WAITFOR DELAY '00:00:10';
+
+        SELECT id
+        FROM CourseSection WITH (UPDLOCK, HOLDLOCK)
+        WHERE id = @SecondSectionId;
         -- Validate Student
         IF dbo.fn_is_valid_student(@StudentId)=0
         BEGIN
