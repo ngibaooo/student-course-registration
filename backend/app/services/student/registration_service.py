@@ -39,6 +39,11 @@ class RegistrationService:
             if "Lớp đã đầy" in str(e):
                 message = "Lớp học phần đã đầy"
 
+            message = "Đăng ký thất bại"
+
+            if "Lớp đã đầy" in str(e):
+                message = "Lớp học phần đã đầy"
+
             raise HTTPException(
                 status_code=400,
                 detail=str(e)
