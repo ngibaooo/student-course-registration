@@ -236,11 +236,11 @@ The project emphasizes:
 
 | No  | Full Name | Student ID | Responsibility                                                              | Contribution (%) |
 | --- | --------- | ---------- | --------------------------------------------------------------------------- | ---------------- |
-| TV1 | Ngô Gia Bảo       | 079205011307| Database Design, Registration Module, Git Management, Team Support (Leader) |               |
-| TV2 | Nguyễn Quang Vinh       |         | Admin Module (Backend APIs & Business Logic)                                |               |
-| TV3 | Trần Tấn Tài      |         | Student Module & Authentication (Backend APIs & Business Logic)             |               |
-| TV4 | Trần Lê Quốc Trí       |         | Frontend Development (Admin & Student Interfaces)                           |               |
-| TV5 | Nguyễn Hoàng Thiên Tân   |         | Documentation, SRS, PowerPoint, Testing Support                           |               |
+| TV1 | Ngô Gia Bảo       | 079205011307| Database Design, Registration Module, Git Management, Team Support (Leader) |100%|
+| TV2 | Nguyễn Quang Vinh       |077206008982| Admin Module (Backend APIs & Business Logic)                                |100%|
+| TV3 | Trần Tấn Tài      |080205013828| Student Module & Authentication (Backend APIs & Business Logic)             |100%|
+| TV4 | Trần Lê Quốc Trí       |051206011604| Frontend Development (Admin & Student Interfaces)                           |90%|
+| TV5 | Nguyễn Hoàng Thiên Tân   |066206015298| Documentation, SRS, PowerPoint, Testing Support                           |70%|
 
 **Notes**
 
