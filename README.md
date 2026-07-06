@@ -184,9 +184,60 @@ database/triggers.sql
 
 ### 5. Run Backend Server
 
-Instructions will be updated after backend structure is completed.
+#### Step 1: Navigate to the backend directory
 
----
+```bash
+cd backend
+```
+
+#### Step 2: Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+#### Step 3: Activate the virtual environment
+
+**Windows (PowerShell)**
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+> If PowerShell blocks script execution, run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Then activate the environment again:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+#### Step 4: Install required packages
+
+```bash
+pip install -r requirements.txt
+```
+
+#### Step 5: Start the FastAPI server
+
+```bash
+uvicorn app.main:app --reload
+```
+
+The backend server will be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+You can access the API documentation at:
+
+- Swagger UI: `http://127.0.0.1:8000/docs`
+- ReDoc: `http://127.0.0.1:8000/redoc`
 
 ## Git Workflow
 
