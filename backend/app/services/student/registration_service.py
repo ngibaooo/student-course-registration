@@ -42,7 +42,7 @@ class RegistrationService:
             raise HTTPException(
                 status_code=400,
                 detail=str(e)
-    )
+            )
     @staticmethod
     def cancel_course_section(
         db,
